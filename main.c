@@ -6,7 +6,8 @@ int main() {
   int token;
   yyin = testFile;
   while( (token = yylex()) ) {
-    printf("line: %d, token: %d, buffer: %s\n",yylineno,token,yytext);
+    printf("at line  %d \n", getLineNumber());
+
   }
 
   return 0;

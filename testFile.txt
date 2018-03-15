@@ -1,7 +1,7 @@
-ofmaemfa
-faeofma
-emaeofmae
-aeofma
-efmaeofm
-afeaofm
-a
+test<1
+"string"
+"char"
+"c"
+"1"
+0.0
+"0.0"

@@ -1,1 +1,1 @@
-/Library/Developer/CommandLineTools/usr/bin/cc -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/Compiladores.dir/main.c.o  -o Compiladores 
+/Library/Developer/CommandLineTools/usr/bin/cc -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/Compiladores.dir/main.c.o CMakeFiles/Compiladores.dir/hash.c.o  -o Compiladores 

@@ -80,7 +80,16 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/leonardodalcin/CLionProjects/Compiladores/hash.c">
+			<Option target="Compiladores"/>
+		</Unit>
+		<Unit filename="/Users/leonardodalcin/CLionProjects/Compiladores/hash.h">
+			<Option target="Compiladores"/>
+		</Unit>
 		<Unit filename="/Users/leonardodalcin/CLionProjects/Compiladores/main.c">
+			<Option target="Compiladores"/>
+		</Unit>
+		<Unit filename="/Users/leonardodalcin/CLionProjects/Compiladores/tokens.h">
 			<Option target="Compiladores"/>
 		</Unit>
 		<Unit filename="/Users/leonardodalcin/CLionProjects/Compiladores/CMakeLists.txt">
