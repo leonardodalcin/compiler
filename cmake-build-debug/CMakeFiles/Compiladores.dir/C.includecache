@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/leonardodalcin/CLionProjects/Compiladores/lex.yy.c
+stdio.h
+-
+string.h
+-
+errno.h
+-
+stdlib.h
+-
+inttypes.h
+-
+unistd.h
+-
+
+/Users/leonardodalcin/CLionProjects/Compiladores/main.c
+stdio.h
+-
+lex.yy.c
+/Users/leonardodalcin/CLionProjects/Compiladores/lex.yy.c
+
