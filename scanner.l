@@ -7,11 +7,21 @@ int numLines = 1;
 
 %}
 
-%x COMM
+%x COMMENT
 
 
 
 %%
+
+
+    /* Ignora comentários */
+
+"/*"                {BEGIN(COMMENT);}
+<COMMENT>"*/"       {BEGIN(INITIAL);}
+<COMMENT>.          {}
+"//".*              {return printf("[DEBUG] Found // ");}
+<COMMENT>\n		{numLines++;}
+
 "char" {printf("[DEBUG] Found char "); return KW_CHAR;}
 "int" {printf("[DEBUG] Found int "); return KW_INT;}
 "float" {printf("[DEBUG] Found float "); return KW_FLOAT;}
@@ -23,6 +33,8 @@ int numLines = 1;
 "read" {printf("[DEBUG] Found read "); return KW_READ;}
 "print" {printf("[DEBUG] Found print "); return KW_PRINT;}
 "return" {printf("[DEBUG] Found return "); return KW_RETURN;}
+
+    /* Caracteres especiais: Retorna o código ASCII */
 
 "," {return printf("[DEBUG] Found , ");}
 ";" {return printf("[DEBUG] Found ; ");}
@@ -45,6 +57,8 @@ int numLines = 1;
 "$" {return printf("[DEBUG] Found $ ");}
 "#" {return printf("[DEBUG] Found # ");}
 
+    /* Operadores compostos */
+
 "<="				{return printf("[DEBUG] Found <= ");}
 ">="				{return printf("[DEBUG] Found >= ");}
 "=="				{return printf("[DEBUG] Found == ");}
@@ -65,6 +79,10 @@ int numLines = 1;
 
 %%
 
+
+    /* ################# Funções ################# */
+
+
 int yywrap(void){
 	running = 0;
 	return 1;
@@ -72,4 +90,13 @@ int yywrap(void){
 
 int getLineNumber(void) {
 	return numLines;
+}
+
+int isRunning(void) {
+  return running;
+}
+
+void initMe(void) {
+  running = 1;
+  numLines = 1;
 }
