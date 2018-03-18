@@ -3,3 +3,5 @@
 cmake-build-debug/
 
 lex\.yy\.c
+
+\.DS_Store
