@@ -1,6 +1,6 @@
-//
-// Created by Leonardo Dalcin on 3/15/18.
-//
+/*  ################      Trabalho Prático - Compiladores [PARTE 1]  ################    */
+/*                      Rodolfo Viola Carvalho - 265043   (rvcarvalho)                   */
+/*                      Leonardo Vogel Dalcin - 243654   (lvdalcin)                      */
 
 #ifndef COMPILADORES_HASH_H
 #define COMPILADORES_HASH_H

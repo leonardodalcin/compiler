@@ -1,3 +1,7 @@
+/*  ################      Trabalho Prático - Compiladores [PARTE 1]  ################    */
+/*                      Rodolfo Viola Carvalho - 265043   (rvcarvalho)                   */
+/*                      Leonardo Vogel Dalcin - 243654   (lvdalcin)                      */
+
 #include <memory.h>
 #include "stdlib.h"
 #include "hash.h"
