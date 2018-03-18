@@ -1,77 +1,57 @@
-//
-// Created by Leonardo Dalcin on 3/15/18.
-//
-
-#include <stdlib.h>
-#include <string.h>
+#include <memory.h>
+#include "stdlib.h"
 #include "hash.h"
+#include "tokens.h"
 
-#define SIZE 997
+HASH_ELEMENT *Table[HASH_SIZE];
 
-HASH_ELEMENT *hashTable[SIZE];
-
-void hash_init()
-{
-  int i;
-  for(i = 0; i < SIZE; ++i)
-    hashTable[i] = 0;
+void hashInit(void) {
+  for (int i = 0; i < HASH_SIZE; ++i) {
+    Table[i] = 0;
+  }
 }
 
-HASH_ELEMENT* hash_insert(int token, char *text)
-{
-  int address;
-  HASH_ELEMENT *element;
-
-  if(element = hash_find(text))
-    return element;
-
-  element = (HASH_ELEMENT*)malloc(sizeof(HASH_ELEMENT));
-  element->token = token;
-  element->text = (char*)calloc(strlen(text)+1,sizeof(char));
-  strcpy(element->text, text);
-  element->next = 0;
-
-  address = hash_address(text);
-  element->next = hashTable[address];
-  hashTable[address] = element;
-
-  return element;
-}
-
-int hash_address(char *text)
-{
-  int i;
-  int address=1;
-  int textlen = strlen(text);
-  for(i = 0; i < textlen; ++i)
-  {
-    address = (address * text[i]) % SIZE + 1;
+int hashAddress(char *text) {
+  int address = 1;
+  for (int i = 0; i < strlen(text); ++i) {
+    address = (address * text[i]) % HASH_SIZE + 1;
   }
   return address - 1;
 }
 
-HASH_ELEMENT* hash_find(char *text)
-{
+HASH_ELEMENT *hashInsert(int type, char *text) {
   int address;
-  HASH_ELEMENT *ret;
+  HASH_ELEMENT *newnode = 0;
+  address = hashAddress(text);
+  newnode = (HASH_ELEMENT *) calloc(1, sizeof(HASH_ELEMENT));
+  newnode->yytext = calloc(strlen(text) + 1, sizeof(char));
+  newnode->type = type;
 
-  address = hash_address(text);
-
-  ret = hashTable[address];
-  while(ret && strcmp(ret->text, text) != 0) ret = ret->next;
-
-  return ret;
+  strcpy(newnode->yytext, text);
+  newnode->next = Table[address];
+  Table[address] = newnode;
+  return newnode;
 }
 
-void hash_print()
+void hashPrint()
 {
-  int i;
-  HASH_ELEMENT *aux;
-  for(i = 0; i < SIZE; ++i){
-    aux = hashTable[i];
-    while(aux != 0) {
-      printf("%d %s\n", aux->token, aux->text);
-      aux = aux->next;
-    }
-  }
+  HASH_ELEMENT *node;
+  for(int i=0; i<HASH_SIZE; i++)
+    for(node = Table[i]; node; node=node->next)
+      switch (node->type) {
+        case TK_IDENTIFIER:
+          printf("Table[%d] = %s is SYMBOL_IDENTIFIER\n", i, node->yytext);
+          break;
+        case LIT_CHAR:
+          printf("Table[%d] = %s is SYMBOL_LITERAL_CHAR\n", i, node->yytext);
+          break;
+        case LIT_STRING:
+          printf("Table[%d] = %s is SYMBOL_LITERAL_STRING\n", i, node->yytext);
+          break;
+        case LIT_INTEGER:
+          printf("Table[%d] = %s is SYMBOL_LITERAL_INT\n", i, node->yytext);
+          break;
+        default:
+          printf("Table[%d]. Type not identified\n", i);
+      }
 }

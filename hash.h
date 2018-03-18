@@ -5,17 +5,16 @@
 #ifndef COMPILADORES_HASH_H
 #define COMPILADORES_HASH_H
 #include <stdio.h>
-
-typedef struct hash_t {
-    int token;
-    char *text;
-    struct hash_t *next;
+#define HASH_SIZE 997
+typedef struct hash_node {
+    int type;
+    char *yytext;
+    struct hash_node *next;
 } HASH_ELEMENT;
 
-void hash_init();
-HASH_ELEMENT* hash_insert(int token, char *text);
-int hash_address(char *text);
-HASH_ELEMENT* hash_find(char *text);
-void hash_print();
+void hashInit(void);
+int hashAddress(char *text);
+HASH_ELEMENT* hashInsert(int type, char *text);
+void hashPrint(void);
 
 #endif //COMPILADORES_HASH_H

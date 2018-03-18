@@ -75,12 +75,13 @@ int numLines = 1;
 "&&"	{ printf("[DEBUG] Found && "); return OPERATOR_AND;}
 "||"	{ printf("[DEBUG] Found || "); return OPERATOR_OR;}
 
-[A-Za-z_]{1}[A-Za-z_0-9]* {printf("[DEBUG] Found identifier '%s' ", yytext);hash_insert(TK_IDENTIFIER, yytext);       return TK_IDENTIFIER;}
-[0-9]+					{printf("[DEBUG] Found integer literal: '%s' ", yytext);hash_insert(LIT_INTEGER, yytext);   return LIT_INTEGER;}
-[0-9]+[.][0-9]+			{printf("[DEBUG] Found real literal: '%s' ", yytext);hash_insert(LIT_REAL, yytext);         return TK_IDENTIFIER;}
-['][^\n][']	    {printf("[DEBUG] Found char literal: '%s' ", yytext);hash_insert(LIT_CHAR, yytext);         return TK_IDENTIFIER;}
-"([^\"\\\n]|\\[\"\\n])+\	            {printf("[DEBUG] Found string literal: '%s' ", yytext);hash_insert(LIT_STRING, yytext);     return TK_IDENTIFIER;}
+[A-Za-z_]{1}[A-Za-z_0-9]* {printf("[DEBUG] Found identifier '%s' ", yytext);hashInsert(TK_IDENTIFIER, yytext);       return TK_IDENTIFIER;}
+[0-9]+					{printf("[DEBUG] Found integer literal: '%s' ", yytext);hashInsert(LIT_INTEGER, yytext);   return LIT_INTEGER;}
+[0-9]+[.][0-9]+			{printf("[DEBUG] Found real literal: '%s' ", yytext);hashInsert(LIT_REAL, yytext);         return TK_IDENTIFIER;}
+['][^\n][']	    {printf("[DEBUG] Found char literal: '%s' ", yytext);hashInsert(LIT_CHAR, yytext);         return TK_IDENTIFIER;}
+\"([^\"\\\n]|\\[\"\\n])+\	            {printf("[DEBUG] Found string literal: '%s' ", yytext);hashInsert(LIT_STRING, yytext);     return TK_IDENTIFIER;}
 
+[\t]      {}
 \n		{numLines++;}
 .		{printf("[ERROR] %s", yytext); return TOKEN_ERROR;}
 
