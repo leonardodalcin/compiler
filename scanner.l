@@ -5,6 +5,8 @@
 %{
 #include "tokens.h"
 #include "hash.h"
+#include <stdio.h>
+#import "main.c"
 
 int running = 1;
 int numLines = 1;
@@ -109,6 +111,10 @@ int isRunning(void) {
 }
 
 void initMe(void) {
+  hashInit();
   running = 1;
   numLines = 1;
 }
+
+
+

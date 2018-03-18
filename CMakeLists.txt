@@ -3,4 +3,4 @@ project(Compiladores C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Compiladores main.c tokens.h hash.c hash.h)
+add_executable(Compiladores main.c tokens.h hash.c hash.h main.c)
