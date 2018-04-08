@@ -5,8 +5,8 @@
 %{
 #include "tokens.h"
 #include "hash.h"
+#include "scanner.h"
 #include <stdio.h>
-#import "main.c"
 
 int running = 1;
 int numLines = 1;
@@ -26,7 +26,7 @@ int numLines = 1;
 "/*"                {BEGIN(COMMENT);}
 <COMMENT>"*/"       {BEGIN(INITIAL);}
 <COMMENT>.          {}
-"//".*              {return printf("[DEBUG] Found // ");}
+"//".*              {}
 <COMMENT>\n		    {numLines++;}
 
 
@@ -48,33 +48,14 @@ int numLines = 1;
 
          /* ################# Caracteres especiais: Retorna o código ASCII ################# */
 
+",;:()[]{}+-*/<>=!&$#" {printf("[DEBUG] Found , "); return yytext[0];}
 
-"," {return printf("[DEBUG] Found , "); return yytext[0];}
-";" {return printf("[DEBUG] Found ; "); return yytext[0];}
-":" {return printf("[DEBUG] Found : "); return yytext[0];}
-"(" {return printf("[DEBUG] Found ( "); return yytext[0];}
-")" {return printf("[DEBUG] Found ) "); return yytext[0];}
-"[" {return printf("[DEBUG] Found [ "); return yytext[0];}
-"]" {return printf("[DEBUG] Found ] "); return yytext[0];}
-"{" {return printf("[DEBUG] Found { "); return yytext[0];}
-"}" {return printf("[DEBUG] Found } "); return yytext[0];}
-"+" {return printf("[DEBUG] Found + "); return yytext[0];}
-"-" {return printf("[DEBUG] Found - "); return yytext[0];}
-"*" {return printf("[DEBUG] Found * "); return yytext[0];}
-"/" {return printf("[DEBUG] Found / "); return yytext[0];}
-"<" {return printf("[DEBUG] Found < "); return yytext[0];}
-">" {return printf("[DEBUG] Found > "); return yytext[0];}
-"=" {return printf("[DEBUG] Found = "); return yytext[0];}
-"!" {return printf("[DEBUG] Found ! "); return yytext[0];}
-"&" {return printf("[DEBUG] Found & "); return yytext[0];}
-"$" {return printf("[DEBUG] Found $ "); return yytext[0];}
-"#" {return printf("[DEBUG] Found # "); return yytext[0];}
 
 
          /*  ################# Operadores compostos ################# */
 
 
-"<="	{printf("[DEBUG] Found <= ");  return OPERATOR_LE;}
+"<="	{ printf("[DEBUG] Found <= ");  return OPERATOR_LE;}
 ">="	{ printf("[DEBUG] Found >= "); return OPERATOR_GE;}
 "=="	{ printf("[DEBUG] Found == "); return OPERATOR_EQ;}
 "!="	{ printf("[DEBUG] Found != "); return OPERATOR_NE;}
@@ -86,17 +67,14 @@ int numLines = 1;
 [0-9]+[.][0-9]+		    	{printf("[DEBUG] Found real literal: '%s' ", yytext);hashInsert(LIT_REAL, yytext);         return LIT_REAL;}
 ['][^\n][']	                {printf("[DEBUG] Found char literal: '%s' ", yytext);hashInsert(LIT_CHAR, yytext);         return LIT_CHAR;}
 \"([^\"\\\n]|\\[\"\\n])+\"	{printf("[DEBUG] Found string literal: '%s' ", yytext);hashInsert(LIT_STRING, yytext);     return LIT_STRING;}
-[1-9][A-Za-z_0-9]*          {printf("[ERROR] %s", yytext); return TOKEN_ERROR;}
 
-[\t]      {}
+[ \t]      {}
 \n		{numLines++;}
 .		{printf("[ERROR] %s", yytext); return TOKEN_ERROR;}
 
 %%
 
-
          /* ################# Funções ################# */
-
 
 int yywrap(void){
 	running = 0;

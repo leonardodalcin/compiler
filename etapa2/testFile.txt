@@ -1,8 +1,0 @@
-id1<=id2
-id1>=
-
-id3==id4
-
-
-1 != 0
-TRUE && TRUE || id3
