@@ -197,6 +197,8 @@ int main(int argc, char* argv[])
     if(yyparse() == 0)
     {
       printf("Sucess, this is a program!\nLines: %d\n", getLineNumber());
+        hashPrint();
+        exit(0);
     }
   } else {
     printf("Usage: ./etapa2 input_filepath\n");
@@ -205,6 +207,7 @@ int main(int argc, char* argv[])
 
   int yyerror(char *s)
   {
-
     fprintf(stderr, "line %d: %s\n", getLineNumber(), s);
+    hashPrint();
+    exit(3);
   }
