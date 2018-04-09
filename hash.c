@@ -5,11 +5,13 @@
 #include <memory.h>
 #include "stdlib.h"
 #include "hash.h"
-#include "tokens.h"
+#include "y.tab.h"
+
 
 HASH_ELEMENT *Table[HASH_SIZE];
 
 void hashInit(void) {
+  puts("init");
   for (int i = 0; i < HASH_SIZE; ++i) {
     Table[i] = 0;
   }
@@ -24,6 +26,8 @@ int hashAddress(char *text) {
 }
 
 HASH_ELEMENT *hashInsert(int type, char *text) {
+
+  printf("%d", type);
   int address;
   HASH_ELEMENT *newnode = 0;
   address = hashAddress(text);

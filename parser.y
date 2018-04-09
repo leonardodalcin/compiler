@@ -1,18 +1,14 @@
 %{
+
 #include<stdio.h>
 #include<stdlib.h>
-#include "hash.h"
 #include "scanner.h"
+#include "hash.h"
 
+
+extern FILE *yyin;
 %}
 
-%union
-{
-	struct hash_node *symbol;
-}
-
-
-/*Tokens e declaração de tipos*/
 %token KW_CHAR
 %token KW_INT
 %token KW_FLOAT
@@ -40,174 +36,175 @@
 %token LIT_STRING
 %token TOKEN_ERROR
 
+%union
+{
+	struct hash_node *symbol;
+}
 %%
 
-	name:
-    	TK_IDENTIFIER
+    	program: cmdList program
+    	|
     	;
 
-	global: program
-	;
+		declaration:
+			type TK_IDENTIFIER '=' value
+			| type '#' TK_IDENTIFIER '=' value
+			| vector
+			;
 
-	program: declar ';' program
-	|
-	;
+    	atr:
+    	 | TK_IDENTIFIER '=' exp
+    	 | TK_IDENTIFIER '[' aritExp ']' '=' TK_IDENTIFIER '[' aritExp ']'
 
-	declar:
-	var
-	| func
-	| vector
-	| '#' name
-	|
-	;
+    	fCall:
+    		TK_IDENTIFIER '('paramListCall')'
 
-	atr:
-	 | var '=' exp
-	 | vector '[' exp ']' '=' exp
-
-	fCall:
-		name '('paramListCall')'
-
-	paramListCall:
-	fParamCall
-	| fParamCall ',' paramListCall
-	|
-	;
-
-	fParamCall:
-		name
-		|'&' name
-		|'#' name
-
-	aritExp: TK_IDENTIFIER
-    			| 	TK_IDENTIFIER '[' aritExp ']'
-    			| 	LIT_INTEGER
-    			|	LIT_CHAR
-    			| 	'(' aritExp ')'
-    			| 	'-' aritExp
-    			| 	aritExp '+' aritExp
-    			| 	aritExp '-' aritExp
-    			| 	aritExp '*' aritExp
-    			| 	aritExp '/' aritExp
-    			;
-	boolExp:
-				|	TK_IDENTIFIER
-				| 	LIT_INTEGER
-				| 	LIT_REAL
-				|	LIT_CHAR
-				|	LIT_STRING
-				| 	'!' boolExp
-				| 	aritExp '<' aritExp
-				| 	aritExp '>' aritExp
-				| 	aritExp OPERATOR_LE aritExp
-				| 	aritExp OPERATOR_GE aritExp
-				| 	aritExp OPERATOR_EQ aritExp
-				| 	aritExp OPERATOR_NE aritExp
-				| 	boolExp OPERATOR_AND boolExp
-				| 	boolExp OPERATOR_OR boolExp
-				;
-
-		exp: aritExp
-			| 	boolExp
-      		;
-
-
-	fluxControl:
-    	KW_IF '(' exp ')' KW_THEN cmd
-    	| KW_IF '(' exp ')' KW_THEN cmd KW_ELSE cmd
-    	| KW_WHILE '(' exp ')' cmd
-    	| KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' cmd
+    	paramListCall:
+    	fParamCall
+    	| fParamCall ',' paramListCall
+    	|
     	;
 
-    cmd:
-     atr
-     | fluxControl
-     | KW_READ var
-     | KW_RETURN
-     | KW_PRINT
-     |
+    	fParamCall:
+    		TK_IDENTIFIER
+    		|'&' TK_IDENTIFIER
+    		|'#' TK_IDENTIFIER
+    		| value
 
-	listOutput: aritExp
-    			| 	LIT_STRING
-    			| 	listOutput ' ' aritExp
-    			| 	listOutput ' ' LIT_STRING
-    			;
+    	aritExp: TK_IDENTIFIER
+        			| 	TK_IDENTIFIER '[' aritExp ']'
+        			| 	LIT_INTEGER
+        			|	LIT_CHAR
+        			|   '#' TK_IDENTIFIER
+        			|   '&' TK_IDENTIFIER
+        			| 	'(' aritExp ')'
+        			| 	'-' aritExp
+        			| 	aritExp '+' aritExp
+        			| 	aritExp '-' aritExp
+        			| 	aritExp '*' aritExp
+        			| 	aritExp '/' aritExp
+        			;
+    	boolExp:
+    				TK_IDENTIFIER
+    				| 	LIT_INTEGER
+    				| 	LIT_REAL
+    				|	LIT_CHAR
+    				|	LIT_STRING
+    				| 	'!' boolExp
+    				| 	aritExp '<' aritExp
+    				| 	aritExp '>' aritExp
+    				| 	aritExp OPERATOR_LE aritExp
+    				| 	aritExp OPERATOR_GE aritExp
+    				| 	exp OPERATOR_EQ exp
+    				| 	exp OPERATOR_NE exp
+    				| 	boolExp OPERATOR_AND boolExp
+    				| 	boolExp OPERATOR_OR boolExp
+    				;
 
-	cmd: ';' /*Comando vazio*/
-	| 	KW_READ var
-	| 	KW_PRINT listOutput
-	| 	KW_RETURN exp
-	| fluxControl
-	| 	TK_IDENTIFIER '=' exp
-	| 	TK_IDENTIFIER '[' exp ']' '=' exp
-	;
+    		exp:  aritExp
+    			| 	boolExp
+    			| fCall
+          		;
 
-	cmdList:
-	cmd ';' cmdList
-	| cmd
-	;
 
-	cmdBlock:
-	'{' cmdList '}'
-	;
+    	fluxControl:
+        	KW_IF '(' exp ')' KW_THEN cmd
+        	| KW_IF '(' exp ')' KW_THEN cmd KW_ELSE cmd
+        	| KW_WHILE '(' exp ')' cmdList
+        	| KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' cmd
+        	;
 
-	var:
-	type name '=' value
-	;
+    	listOutput: aritExp
+        			| 	LIT_STRING
+        			| 	listOutput aritExp
+        			| 	listOutput LIT_STRING
+        			;
 
-	size:
-    	LIT_INTEGER
+    	cmd:
+    	| cmdBlock
+    	| 	KW_READ TK_IDENTIFIER
+    	| 	KW_PRINT listOutput
+    	| 	KW_RETURN exp
+    	| fluxControl
+    	| 	atr
+    	| declaration
+    	| func
+    	| fCall
     	;
 
-	vector:
-	type name '[' size ']'
-	| vector ':' vectorValueList
-	;
+    	cmdList:
+    	cmd ';' cmdList
+    	| cmd
+    	;
 
-	vectorValueList:
-	value vectorValueList
-	|
-	;
+    	cmdBlock:
+    	'{' cmdList '}'
+    	;
 
-	type:
-	KW_CHAR
-    | KW_INT
-    | KW_FLOAT
-    ;
 
-    value:
-    LIT_INTEGER
-    | LIT_REAL
-    | LIT_STRING
-    ;
+    	vector:
+    	type TK_IDENTIFIER '[' LIT_INTEGER ']'
+    	| vector ':' vectorValueList ';'
+    	;
 
-    func:
-    fHeader fBody
-    ;
+    	vectorValueList:
+    	value vectorValueList
+    	|
+    	;
 
-    fBody:
-    	cmdBlock
+    	type:
+    	KW_CHAR
+        | KW_INT
+        | KW_FLOAT
+        ;
 
-    fHeader:
-    type name '(' paramList ')'
+        value:
+        LIT_INTEGER
+        | LIT_REAL
+        | LIT_STRING
+        | LIT_CHAR
+        ;
 
-    paramList:
-    fParam
-    | fParam ',' paramList
-    |
-    ;
+        func:
+        fHeader fBody
+        ;
 
-    fParam:
-    type name
-    |
-    ;
+        fBody:
+        	cmdBlock
+
+        fHeader:
+        type TK_IDENTIFIER '(' paramList ')'
+
+        paramList:
+        fParam
+        | fParam ',' paramList
+        |
+        ;
+
+        fParam:
+        type TK_IDENTIFIER
+        |
+        ;
 
 %%
+
+int main(int argc, char* argv[])
+{
+  if (argc > 1 && (yyin = fopen(argv[1], "r")))
+  {
+  initMe();
+ 	 yydebug = 0;
+    if(yyparse() == 0)
+    {
+      printf("Sucess, this is a program!\nLines: %d\n", getLineNumber());
+    }
+  } else {
+    printf("Usage: ./etapa2 input_filepath\n");
+  }
+}
 
   int yyerror(char *s)
   {
-  	puts(s);
+
     fprintf(stderr, "line %d: %s\n", getLineNumber(), s);
-    hashPrint();
-    exit(3);
   }

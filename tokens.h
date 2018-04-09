@@ -24,6 +24,8 @@
 #define KW_READ       266
 #define KW_RETURN     267
 #define KW_PRINT      268
+#define KW_TO      269
+
 
 #define OPERATOR_LE   270
 #define OPERATOR_GE   271
