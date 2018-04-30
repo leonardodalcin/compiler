@@ -36,157 +36,131 @@ extern FILE *yyin;
 %token LIT_STRING
 %token TOKEN_ERROR
 
+
 %union
 {
 	struct hash_node *symbol;
 }
 %%
 
-    	program: cmdList program
-    	|
-    	;
+program: decl
+;
 
-		declaration:
-			type TK_IDENTIFIER '=' value
-			| type '#' TK_IDENTIFIER '=' value
-			| vector
-			;
+decl: dec decl
+|
+;
 
-    	atr:
-    	 | TK_IDENTIFIER '=' exp
-    	 | TK_IDENTIFIER '[' aritExp ']' '=' TK_IDENTIFIER '[' aritExp ']'
+dec: decvar
+| decvetor
+| decfunction
+| decpointer
+;
 
-    	fCall:
-    		TK_IDENTIFIER '('paramListCall')'
+decvar: typevar TK_IDENTIFIER '=' literal ';'
+;
 
-    	paramListCall:
-    	fParamCall
-    	| fParamCall ',' paramListCall
-    	|
-    	;
+decvetor: typevar TK_IDENTIFIER '[' LIT_INTEGER ']' ':' decv ';'
+|typevar TK_IDENTIFIER '[' LIT_INTEGER ']' ';'
+;
 
-    	fParamCall:
-    		TK_IDENTIFIER
-    		|'&' TK_IDENTIFIER
-    		|'#' TK_IDENTIFIER
-    		| value
+decfunction: typevar TK_IDENTIFIER '(' paramlist ')' body
 
-    	aritExp: TK_IDENTIFIER
-        			| 	TK_IDENTIFIER '[' aritExp ']'
-        			| 	LIT_INTEGER
-        			|	LIT_CHAR
-        			|   '#' TK_IDENTIFIER
-        			|   '&' TK_IDENTIFIER
-        			| 	'(' aritExp ')'
-        			| 	'-' aritExp
-        			| 	aritExp '+' aritExp
-        			| 	aritExp '-' aritExp
-        			| 	aritExp '*' aritExp
-        			| 	aritExp '/' aritExp
-        			;
-    	boolExp:
-    				TK_IDENTIFIER
-    				| 	LIT_INTEGER
-    				| 	LIT_REAL
-    				|	LIT_CHAR
-    				|	LIT_STRING
-    				| 	'!' boolExp
-    				| 	aritExp '<' aritExp
-    				| 	aritExp '>' aritExp
-    				| 	aritExp OPERATOR_LE aritExp
-    				| 	aritExp OPERATOR_GE aritExp
-    				| 	exp OPERATOR_EQ exp
-    				| 	exp OPERATOR_NE exp
-    				| 	boolExp OPERATOR_AND boolExp
-    				| 	boolExp OPERATOR_OR boolExp
-    				;
+        decpointer: typevar '#' TK_IDENTIFIER '=' literal ';'
 
-    		exp:  aritExp
-    			| 	boolExp
-    			| fCall
-          		;
+decv:	LIT_INTEGER decv
+| LIT_CHAR decv
+| LIT_REAL decv
+| ' ' decv
+|
+;
+
+typevar: KW_CHAR
+| KW_INT
+| KW_FLOAT
+;
+
+literal: LIT_INTEGER
+| LIT_CHAR
+| LIT_REAL
+;
+
+paramlist: typevar TK_IDENTIFIER rest
+| literal rest
+| TK_IDENTIFIER rest
+|
+;
+
+rest: ',' typevar TK_IDENTIFIER rest
+| ',' literal rest
+| ',' TK_IDENTIFIER rest
+|
+;
 
 
-    	fluxControl:
-        	KW_IF '(' exp ')' KW_THEN cmd
-        	| KW_IF '(' exp ')' KW_THEN cmd KW_ELSE cmd
-        	| KW_WHILE '(' exp ')' cmdList
-        	| KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp ')' cmd
-        	;
+cmd: attribution
+| flux_control
+| inout
+| body
+|
+;
 
-    	listOutput: aritExp
-        			| 	LIT_STRING
-        			| 	listOutput aritExp
-        			| 	listOutput LIT_STRING
-        			;
+body: '{' lcmd '}'
+;
 
-    	cmd:
-    	| cmdBlock
-    	| 	KW_READ TK_IDENTIFIER
-    	| 	KW_PRINT listOutput
-    	| 	KW_RETURN exp
-    	| fluxControl
-    	| 	atr
-    	| declaration
-    	| func
-    	| fCall
-    	;
+lcmd: cmd ';' lcmd
+| dec lcmd
+| cmd
+;
 
-    	cmdList:
-    	cmd ';' cmdList
-    	| cmd
-    	;
+attribution: TK_IDENTIFIER '=' exp
+| TK_IDENTIFIER '[' exp ']' '=' exp
+;
 
-    	cmdBlock:
-    	'{' cmdList '}'
-    	;
+flux_control: KW_IF '(' exp ')' KW_THEN cmd
+| KW_IF '(' exp ')' KW_THEN cmd KW_ELSE cmd
+| KW_WHILE '(' exp ')' cmd
+| KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp')' cmd
+;
 
+inout: KW_PRINT print_elem
+| KW_READ TK_IDENTIFIER
+| KW_RETURN exp
+;
 
-    	vector:
-    	type TK_IDENTIFIER '[' LIT_INTEGER ']'
-    	| vector ':' vectorValueList ';'
-    	;
+print_elem: LIT_STRING
+| LIT_STRING print_elem
+| LIT_STRING ' ' print_elem
+| exp
+| exp print_elem
+| exp ' ' print_elem
+;
 
-    	vectorValueList:
-    	value vectorValueList
-    	|
-    	;
+exp: TK_IDENTIFIER
+| TK_IDENTIFIER '[' exp ']'
+| '#'TK_IDENTIFIER
+| '&'TK_IDENTIFIER
+| LIT_INTEGER
+| LIT_CHAR
+| exp '+' exp
+| exp '-' exp
+| exp '*' exp
+| exp '/' exp
+| exp '<' exp
+| exp '>' exp
+| '!' exp
+| '(' exp ')'
+| exp OPERATOR_LE exp
+| exp OPERATOR_GE exp
+| exp OPERATOR_EQ exp
+| exp OPERATOR_NE exp
+| exp OPERATOR_AND exp
+| exp OPERATOR_OR exp
+| TK_IDENTIFIER '(' paramlist ')'
+;
 
-    	type:
-    	KW_CHAR
-        | KW_INT
-        | KW_FLOAT
-        ;
-
-        value:
-        LIT_INTEGER
-        | LIT_REAL
-        | LIT_STRING
-        | LIT_CHAR
-        ;
-
-        func:
-        fHeader fBody
-        ;
-
-        fBody:
-        	cmdBlock
-
-        fHeader:
-        type TK_IDENTIFIER '(' paramList ')'
-
-        paramList:
-        fParam
-        | fParam ',' paramList
-        |
-        ;
-
-        fParam:
-        type TK_IDENTIFIER
-        |
-        ;
 
 %%
+
 
 int main(int argc, char* argv[])
 {
@@ -208,6 +182,6 @@ int main(int argc, char* argv[])
   int yyerror(char *s)
   {
     fprintf(stderr, "line %d: %s\n", getLineNumber(), s);
-    hashPrint();
+//    hashPrint();
     exit(3);
   }
