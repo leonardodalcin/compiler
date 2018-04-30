@@ -36,6 +36,13 @@ extern FILE *yyin;
 %token LIT_STRING
 %token TOKEN_ERROR
 
+%left ','
+%left '='
+%left OPERATOR_AND OPERATOR_OR
+%left OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE
+%left '+' '-'
+%left '*' '/'
+
 
 %union
 {
