@@ -4,7 +4,7 @@
 
 %{
 #include "hash.h"
-#include "astree.c"
+#include "astree.h"
 #include "y.tab.h"
 #include <stdio.h>
 

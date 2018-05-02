@@ -56,11 +56,11 @@ typedef struct s_astree
 	{
 	int verif;
 	int type;
-	HASH_NODE * symbol;
+	HASH_ELEMENT * symbol;
 	struct s_astree * son[MAX_SONS];
 	} ASTREE;
 
-ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE* son0, ASTREE* son1, ASTREE* son2, ASTREE* son3);
+ASTREE* astreeCreate(int type, HASH_ELEMENT *symbol, ASTREE* son0, ASTREE* son1, ASTREE* son2, ASTREE* son3);
 void astreePrint(ASTREE *node);
 FILE *FileTree;
 ASTREE* root;

@@ -1,8 +1,9 @@
 #include "astree.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "hash.h"
 
-ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE* son0, ASTREE* son1, ASTREE* son2, ASTREE* son3)
+ASTREE* astreeCreate(int type, HASH_ELEMENT *symbol, ASTREE* son0, ASTREE* son1, ASTREE* son2, ASTREE* son3)
 {
 	ASTREE *newnode = 0;
 
@@ -51,8 +52,8 @@ switch(node->type)
 	{
 		case AST_SYMBOL:
 		if (node->symbol)
-			if(node->symbol->text)
-				fprintf(FileTree, "%s ", node->symbol->text);
+			if(node->symbol->yytext)
+				fprintf(FileTree, "%s ", node->symbol->yytext);
  		break;
 
  		case AST_LE:
