@@ -37,6 +37,7 @@ extern FILE *yyin;
 %type<astree> inout
 %type<astree> exp
 %type<astree> print_elem
+%type<astree> name
 
 
 %token KW_CHAR
@@ -89,20 +90,20 @@ dec: decvar       {$$ = astreeCreate(AST_DECLARACAO, 0, $1, 0, 0, 0);}
 | decpointer      {$$ = astreeCreate(AST_DECLARACAO, 0, $1, 0, 0, 0);}
 ;
 
-decvar: typevar TK_IDENTIFIER '=' literal ';'       {$$ = astreeCreate(AST_VAR, 0, $1, 0, $4, 0);}
+decvar: typevar name '=' literal ';'       {$$ = astreeCreate(AST_VAR, 0, $1, $2, $4, 0);}
 ;
 
-decvetor: typevar TK_IDENTIFIER '[' LIT_INTEGER ']' ':' decv ';'    {$$ = astreeCreate(AST_EXPR_VECTOR, 0, $1, 0, 0, $7);}
-| typevar TK_IDENTIFIER '[' LIT_INTEGER ']' ';'                     {$$ = astreeCreate(AST_EXPR_VECTOR, 0, $1, 0, 0, 0);}
+decvetor: typevar name '[' LIT_INTEGER ']' ':' decv ';'    {$$ = astreeCreate(AST_VECTOR_INIT, $4, $1, $2, $7, 0);}
+| typevar name '[' LIT_INTEGER ']' ';'                     {$$ = astreeCreate(AST_VECTOR_INIT, $4, $1, $2, 0, 0);}
 ;
 
-decfunction: typevar TK_IDENTIFIER '(' paramlist ')' body    {$$ = astreeCreate(AST_FUNC_PARAM, 0, $1, 0, $4, $6);}
+decfunction: typevar name '(' paramlist ')' body    {$$ = astreeCreate(AST_DEC_FUNC, 0, $1, $2, $4, $6);}
 
-decpointer: typevar '#' TK_IDENTIFIER '=' literal ';'    {$$ = astreeCreate(AST_DECLARACAO, 0, $1, 0, $5, 0);}
+decpointer: typevar '#' name '=' literal ';'    {$$ = astreeCreate(AST_DEC_POINTER, 0, $1, $3, $5, 0);}
 
-decv:	LIT_INTEGER decv  {$$ = astreeCreate(AST_SYMBOL, 0, $2, 0, 0, 0);}
-| LIT_CHAR decv           {$$ = astreeCreate(AST_SYMBOL, 0, $2, 0, 0, 0);}
-| LIT_REAL decv           {$$ = astreeCreate(AST_SYMBOL, 0, $2, 0, 0, 0);}
+decv:	LIT_INTEGER decv  {$$ = astreeCreate(AST_SYMBOL, $1, $2, 0, 0, 0);}
+| LIT_CHAR decv           {$$ = astreeCreate(AST_SYMBOL, $1, $2, 0, 0, 0);}
+| LIT_REAL decv           {$$ = astreeCreate(AST_SYMBOL, $1, $2, 0, 0, 0);}
 | ' ' decv                {$$ = astreeCreate(AST_SYMBOL, 0, $2, 0, 0, 0);}
 | {$$ = 0;}
 ;
@@ -117,18 +118,20 @@ literal: LIT_INTEGER  {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
 | LIT_REAL            {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
 ;
 
-paramlist: typevar TK_IDENTIFIER rest  {$$ = astreeCreate(AST_PARAML, $2, $1, $3, 0, 0);}
+paramlist: typevar name rest  {$$ = astreeCreate(AST_PARAML, 0, $1, $2, $3, 0);}
 | literal rest                         {$$ = astreeCreate(AST_PARAML, 0, $1, $2, 0, 0);}
-| TK_IDENTIFIER rest                   {$$ = astreeCreate(AST_PARAML, $1, $2, 0, 0, 0);}
+| name rest                   {$$ = astreeCreate(AST_PARAML, 0, $1, $2, 0, 0);}
 | {$$ = 0;}
 ;
 
-rest: ',' typevar TK_IDENTIFIER rest    {$$ = astreeCreate(AST_REST, $3, 0, 0, 0, 0);}
+rest: ',' typevar name rest    {$$ = astreeCreate(AST_REST, 0, $2, $3, $4, 0);}
 | ',' literal rest                      {$$ = astreeCreate(AST_REST, 0, $2, $3, 0, 0);}
-| ',' TK_IDENTIFIER rest                {$$ = astreeCreate(AST_REST, $2, 0, $3, 0, 0);}
+| ',' name rest                {$$ = astreeCreate(AST_REST, 0, $2, $3, 0, 0);}
 | {$$ = 0;}
 ;
 
+name: TK_IDENTIFIER {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+  ;
 
 cmd: attribution  {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
 | flux_control    {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
@@ -145,19 +148,19 @@ lcmd: cmd ';' lcmd   {$$ = astreeCreate(AST_CMDLIST, 0, $1, $3, 0, 0);}
 | cmd                 {$$ = astreeCreate(AST_CMDLIST, 0, $1, 0, 0, 0);}
 ;
 
-attribution: TK_IDENTIFIER '=' exp           {$$ = astreeCreate(AST_ATTRIBUTION, $1, $3, 0, 0, 0);}
-| TK_IDENTIFIER '[' exp ']' '=' exp           {$$ = astreeCreate(AST_ATTRIBUTION, $1, 0, $3, $6, 0);}
+attribution: name '=' exp           {$$ = astreeCreate(AST_ATTRIBUTION, 0, $1, $3, 0, 0);}
+| name '[' exp ']' '=' exp           {$$ = astreeCreate(AST_ATTRIBUTION, 0, $1, $3, $6, 0);}
 ;
 
 flux_control: KW_IF '(' exp ')' KW_THEN cmd           {$$ = astreeCreate(AST_IF, 0, $3, $6, 0, 0);}
 | KW_IF '(' exp ')' KW_THEN cmd KW_ELSE cmd           {$$ = astreeCreate(AST_ELSE, 0, $3, $6, $8, 0);}
 | KW_WHILE '(' exp ')' cmd                            {$$ = astreeCreate(AST_WHILE, 0, $3, $5, 0, 0);}
-| KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp')' cmd   {$$ = astreeCreate(AST_FOR, $3, 0, $5, $7, $9);}
+| KW_FOR '(' name '=' exp KW_TO exp')' cmd   {$$ = astreeCreate(AST_FOR, 0, $3, $5, $7, $9);}
 ;
 
 inout: KW_PRINT print_elem         {$$ = astreeCreate(AST_CMDLIST, 0, 0, $2, 0, 0);}
-| KW_READ TK_IDENTIFIER            {$$ = astreeCreate(AST_CMDLIST, $2, 0, 0, 0, 0);}
-| KW_RETURN exp                    {$$ = astreeCreate(AST_CMDLIST, 0, 0, $2, 0, 0);}
+| KW_READ name            {$$ = astreeCreate(AST_CMDLIST, 0, $2, 0, 0, 0);}
+| KW_RETURN exp                    {$$ = astreeCreate(AST_CMDLIST, 0, $2, 0, 0, 0);}
 ;
 
 print_elem: LIT_STRING            {$$ = astreeCreate(AST_PRINT, 0, 0, 0, 0, 0);}
@@ -168,10 +171,10 @@ print_elem: LIT_STRING            {$$ = astreeCreate(AST_PRINT, 0, 0, 0, 0, 0);}
 | exp ' ' print_elem              {$$ = astreeCreate(AST_PRINT, 0, $1, $3, 0, 0);}
 ;
 
-exp: TK_IDENTIFIER                   {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
-| TK_IDENTIFIER '[' exp ']'          {$$ = astreeCreate(AST_EXPR_VECTOR, 0, 0, $3, 0, 0);}
-| '#'TK_IDENTIFIER                   {$$ = astreeCreate(AST_HASHTAG, 0, 0, 0, 0, 0);}
-| '&'TK_IDENTIFIER                   {$$ = astreeCreate(AST_E, 0, 0, 0, 0, 0);}
+exp: name                 			 {$$ = $1;}
+| name '[' exp ']'        			 {$$ = astreeCreate(AST_EXPR_VECTOR, 0, $1, $3, 0, 0);}
+| '#' name                			 {$$ = astreeCreate(AST_HASHTAG, 0, $2, 0, 0, 0);}
+| '&' name          	   		     {$$ = astreeCreate(AST_E, 0, $2, 0, 0, 0);}
 | LIT_INTEGER                        {$$ = astreeCreate(AST_SYMBOL, 0, 0, 0, 0, 0); }
 | LIT_CHAR                           {$$ = astreeCreate(AST_SYMBOL, 0, 0, 0, 0, 0); }
 | exp '+' exp                        {$$ = astreeCreate(AST_ADD, 0, $1, $3, 0, 0);}
@@ -196,6 +199,11 @@ exp: TK_IDENTIFIER                   {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0,
 
 int main(int argc, char* argv[])
 {
+if(!(FileTree = fopen(argv[2],"w")))
+  {
+    fprintf(stderr, "Cannot Create: %s \n",argv[2]);
+    exit(2);
+  }
   if (argc > 1 && (yyin = fopen(argv[1], "r")))
   {
   initMe();
@@ -209,11 +217,7 @@ int main(int argc, char* argv[])
   } else {
     printf("Usage: ./etapa2 input_filepath\n");
   }
-  if(!(FileTree = fopen(argv[2],"w")))
-  {
-    fprintf(stderr, "Cannot Create: %s \n",argv[2]);
-    exit(2);
-  }
+
 }
 
   int yyerror(char *s)

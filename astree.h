@@ -59,6 +59,8 @@
 #define AST_ATTRIBUTION 50
 #define AST_E 51
 #define AST_HASHTAG 52
+#define AST_DEC_POINTER 53
+#define AST_DEC_FUNC 54
 
 
 typedef struct s_astree

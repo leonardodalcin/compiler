@@ -25,7 +25,6 @@ void astreePrint(ASTREE *node)
 		return;
 	}
 
-
 	nodeType(node);
 
 	for(i=0; i<MAX_SONS; i++)
@@ -35,14 +34,15 @@ void astreePrint(ASTREE *node)
 
 void nodeType(ASTREE *node)
 {
-	int i = 0;
+  printf("NODE TYPE: %d\n", node->type);
+  int i = 0;
 	if(!node)
 		return;
 	if(node->verif)
 		return;
 	else
 		node -> verif = 1;
-
+  printf("NODE TYPE: %d\n", node->type);
 switch(node->type)
 
 
@@ -56,274 +56,77 @@ switch(node->type)
 				fprintf(FileTree, "%s ", node->symbol->yytext);
  		break;
 
- 		case AST_LE:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"<= ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_GE:
-			nodeType(node->son[0]);
-			fprintf(FileTree,">= ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_NE:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"!= ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_EQ:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"== ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_AND:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"&& ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_OR:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"|| ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_LESS:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"< ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_GREATER:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"> ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_NEG:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"! ");
-		break;
-
-		case AST_MULT:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"* ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_ADD:
-		    nodeType(node->son[0]);
-			fprintf(FileTree,"+ ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_SUB:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"- ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_DIV:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"/ ");
-			nodeType(node->son[1]);
-		break;
-
 		case AST_DECLARACAO:
-			nodeType(node->son[0]);
-			fprintf(FileTree,";\n");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_FUNC:
-			nodeType(node->son[0]);
-			fprintf(FileTree,";\n");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_VAR:
-			nodeType(node->son[0]);
-			fprintf(FileTree,": ");
-			nodeType(node->son[1]);
-			nodeType(node->son[2]);
-		break;
-
-		case AST_EMPTY:
-			fprintf(FileTree," ");
-		break;
-
-		case AST_VECTOR:
-			nodeType(node->son[0]);
-			fprintf(FileTree,": ");
-			nodeType(node->son[1]);
-			fprintf(FileTree,"[");
-			nodeType(node->son[2]);
-			fprintf(FileTree,"]");
-			nodeType(node->son[3]);
-		break;
-
-		case AST_CMDLIST:
-			nodeType(node->son[0]);
-			fprintf(FileTree,";\n");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_READ:
-			fprintf(FileTree,"read ");
+      printf("AST_DECLARACAO, NODE[0] %d\n", node->son[0]->type);
 			nodeType(node->son[0]);
 		break;
 
-		case AST_PRINT:
-			fprintf(FileTree,"print ");
-			nodeType(node->son[0]);
-		break;
+    case AST_VAR:
+      printf("AST_VAR, NODE[0] %d - NODE[1] %d - NODE[2] %d \n", node->son[0]->type, node->son[1]->type, node->son[2]->type);
+      nodeType(node->son[0]);
+      nodeType(node->son[1]);
+      fprintf(FileTree,"=");
+      nodeType(node->son[2]);
+      fprintf(FileTree,";");
+      break;
 
-		case AST_RETURN:
-			fprintf(FileTree,"return ");
-			nodeType(node->son[0]);
-		break;
+    case AST_VECTOR_INIT:
+      printf("AST_VECTOR_INIT, NODE[0] %d - NODE[1] %d - NODE[2] %d \n", node->son[0]->type, node->son[1]->type);
+      if(node->son[2]) {
+        nodeType(node->son[0]);
+        nodeType(node->son[1]);
+        fprintf(FileTree,"[");
+        fprintf(FileTree,"] :");
+        nodeType(node->son[2]);
+        fprintf(FileTree,";");
 
-		case AST_BLOCO:
-			fprintf(FileTree,"\n  {\n");
-			nodeType(node->son[0]);
-			fprintf(FileTree,"\n  }\n");
-		break;
+      } else {
+        nodeType(node->son[0]);
+        nodeType(node->son[1]);
+        fprintf(FileTree,"[");
+        fprintf(FileTree,"]");
+        fprintf(FileTree,";");
+      }
 
-		case AST_BYTE:
-			fprintf(FileTree,"byte ");
-		break;
 
-		case AST_SHORT:
-			fprintf(FileTree,"short ");
-		break;
+    case AST_INT:
+      printf("AST_INT");
+      fprintf(FileTree, "int ");
+      break;
 
-		case AST_LONG:
-			fprintf(FileTree,"long ");
-		break;
+    case AST_CHAR:
+      printf("AST_CHAR");
+      fprintf(FileTree, "char ");
+      break;
 
-		case AST_FLOAT:
-			fprintf(FileTree,"float ");
-		break;
+    case AST_FLOAT:
+      printf("AST_FLOAT");
+      fprintf(FileTree, "float ");
+      break;
 
-		case AST_DOUBLE:
-			fprintf(FileTree,"double ");
-		break;
+    case AST_DEC_POINTER:
+      printf("AST_DEC_POINTER");
+      nodeType(node->son[0]);
+      fprintf(FileTree, "#");
+      nodeType(node->son[1]);
+      fprintf(FileTree, "=");
+      nodeType(node->son[2]);
+      fprintf(FileTree, ";");
+//    decpointer: typevar '#' name '=' literal ';'    {$$ = astreeCreate(AST_DEC_POINTER, 0, $1, $3, $5, 0);}
+      break;
+    case AST_DEC_FUNC:
+//    decfunction: typevar name '(' paramlist ')' body    {$$ = astreeCreate(AST_DEC_FUNC, 0, $1, $2, $4, $6);}
+      printf("AST_DEC_FUNC");
+      nodeType(node->son[0]);
+      nodeType(node->son[1]);
+      fprintf(FileTree, "(");
+      nodeType(node->son[2]);
+      fprintf(FileTree, ")");
+      nodeType(node->son[3]);
+      break;
 
-		case AST_IF:
-			fprintf(FileTree,"if(");
-			nodeType(node->son[0]);
-			fprintf(FileTree,") then\n");
-			nodeType(node->son[1]);
-		break;
+    default:
+      printf("DEFAULT: %d\n", node->type);
 
-		case AST_ELSE:
-			fprintf(FileTree,"when(");
-			nodeType(node->son[0]);
-			fprintf(FileTree,") then\n");
-			nodeType(node->son[1]);
-			fprintf(FileTree,"else\n");
-			nodeType(node->son[2]);
-		break;
-
-		case AST_WHILE:
-			fprintf(FileTree,"while(");
-			nodeType(node->son[0]);
-			fprintf(FileTree,")\n");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_FOR:
-			fprintf(FileTree,"for(");
-			nodeType(node->son[0]);
-			fprintf(FileTree,"= ");
-			nodeType(node->son[1]);
-			fprintf(FileTree,"to ");
-			nodeType(node->son[2]);
-			fprintf(FileTree,")\n");
-			nodeType(node->son[3]);
-		break;
-
-		case AST_VALORLIST:
-			nodeType(node->son[0]);
-			nodeType(node->son[1]);
-		break;
-
-		case AST_DEF:
-			nodeType(node->son[0]);
-			nodeType(node->son[1]);
-		break;
-
-		case AST_ARG:
-		 	nodeType(node->son[0]);
-
-		 	if(node->son[1]){
-			fprintf(FileTree,", ");
-			nodeType(node->son[1]);}
-		break;
-
-		case AST_ONEARG:
-			nodeType(node->son[0]);
-		break;
-
-		case AST_VAR_INIT:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"= ");
-			nodeType(node->son[1]);
-		break;
-
-		case AST_VECTOR_INIT:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"# ");
-			nodeType(node->son[1]);
-			fprintf(FileTree,"= ");
-			nodeType(node->son[2]);
-		break;
-
-		case AST_PARAMLIST:
-			nodeType(node->son[0]);
-
-			if(node->son[1]){
-			fprintf(FileTree,", ");
-			nodeType(node->son[1]);}
-		break;
-
-		case AST_PARAM:
-			nodeType(node->son[0]);
-			nodeType(node->son[1]);
-		break;
-
-		case AST_FUNC_PARAM:
-			nodeType(node->son[0]);
-			nodeType(node->son[1]);
-			fprintf(FileTree,"(");
-			nodeType(node->son[2]);
-			fprintf(FileTree,")\n");
-			nodeType(node->son[3]);
-		break;
-
-		case AST_EXPR_VECTOR:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"[");
-			nodeType(node->son[1]);
-			fprintf(FileTree,"]\n");
-		break;
-
-		case AST_EXPR:
-			fprintf(FileTree,"(");
-			nodeType(node->son[0]);
-			fprintf(FileTree,")");
-		break;
-
-		case AST_EXPR_FUNC:
-			nodeType(node->son[0]);
-			fprintf(FileTree,"(");
-			nodeType(node->son[1]);
-			fprintf(FileTree,")\n");
-		break;
-
-	}
+  }
 };
