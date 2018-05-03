@@ -59,11 +59,11 @@ extern FILE *yyin;
 %token OPERATOR_AND
 %token OPERATOR_OR
 
-%token TK_IDENTIFIER
-%token LIT_INTEGER
-%token LIT_REAL
-%token LIT_CHAR
-%token LIT_STRING
+%token<symbol> TK_IDENTIFIER
+%token<symbol> LIT_INTEGER
+%token<symbol> LIT_REAL
+%token<symbol> LIT_CHAR
+%token<symbol> LIT_STRING
 %token TOKEN_ERROR
 
 %left ','
@@ -107,88 +107,88 @@ decv:	LIT_INTEGER decv  {$$ = astreeCreate(AST_SYMBOL, 0, $2, 0, 0, 0);}
 | {$$ = 0;}
 ;
 
-typevar: KW_CHAR   // {$$ = astreeCreate(AST_CHAR, 0, 0, , 0, 0);}
-| KW_INT           // {$$ = astreeCreate(AST_INT, 0, 0, 0, 0, 0);}
-| KW_FLOAT         // {$$ = astreeCreate(AST_FLOAT, 0, 0, 0, 0, 0);}
+typevar: KW_CHAR    {$$ = astreeCreate(AST_CHAR, 0, 0, 0 , 0, 0);}
+| KW_INT            {$$ = astreeCreate(AST_INT, 0, 0, 0, 0, 0);}
+| KW_FLOAT          {$$ = astreeCreate(AST_FLOAT, 0, 0, 0, 0, 0);}
 ;
 
-literal: LIT_INTEGER // {$$ = astreeCreate(AST_SYMBOL, 0, $1, 0, 0, 0);}
-| LIT_CHAR           // {$$ = astreeCreate(AST_SYMBOL, 0, $1, 0, 0, 0);}
-| LIT_REAL           // {$$ = astreeCreate(AST_SYMBOL, 0, $1, 0, 0, 0);}
+literal: LIT_INTEGER  {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+| LIT_CHAR            {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+| LIT_REAL            {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
 ;
 
-paramlist: typevar TK_IDENTIFIER rest // {$$ = astreeCreate(AST_PARAML, 0, $1, $2, $3, 0);}
-| literal rest                        // {$$ = astreeCreate(AST_PARAML, 0, $1, $2, 0, 0);}
-| TK_IDENTIFIER rest                  // {$$ = astreeCreate(AST_PARAML, 0, $1, $2, 0, 0);}
+paramlist: typevar TK_IDENTIFIER rest  {$$ = astreeCreate(AST_PARAML, $2, $1, $3, 0, 0);}
+| literal rest                         {$$ = astreeCreate(AST_PARAML, 0, $1, $2, 0, 0);}
+| TK_IDENTIFIER rest                   {$$ = astreeCreate(AST_PARAML, $1, $2, 0, 0, 0);}
 | {$$ = 0;}
 ;
 
-rest: ',' typevar TK_IDENTIFIER rest  //  {$$ = astreeCreate(AST_REST, 0, $2, $3, $4, 0);}
-| ',' literal rest                    //  {$$ = astreeCreate(AST_REST, 0, $2, $3, 0, 0);}
-| ',' TK_IDENTIFIER rest              //  {$$ = astreeCreate(AST_REST, 0, $2, $3, 0, 0);}
+rest: ',' typevar TK_IDENTIFIER rest    {$$ = astreeCreate(AST_REST, $3, 0, 0, 0, 0);}
+| ',' literal rest                      {$$ = astreeCreate(AST_REST, 0, $2, $3, 0, 0);}
+| ',' TK_IDENTIFIER rest                {$$ = astreeCreate(AST_REST, $2, 0, $3, 0, 0);}
 | {$$ = 0;}
 ;
 
 
-cmd: attribution // {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
-| flux_control   // {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
-| inout          // {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
-| body           // {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
+cmd: attribution  {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
+| flux_control    {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
+| inout           {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
+| body            {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
 | {$$ = 0;}
 ;
 
-body: '{' lcmd '}'  //{$$ = astreeCreate(AST_BLOCO, 0, $2, 0, 0, 0);}
+body: '{' lcmd '}'  {$$ = astreeCreate(AST_BLOCO, 0, $2, 0, 0, 0);}
 ;
 
-lcmd: cmd ';' lcmd //   {$$ = astreeCreate(AST_CMDLIST, 0, $1, $3, 0, 0);}
-| dec lcmd         //   {$$ = astreeCreate(AST_CMDLIST, 0, $1, $2, 0, 0);}
-| cmd              //   {$$ = astreeCreate(AST_CMDLIST, 0, $1, 0, 0, 0);}
+lcmd: cmd ';' lcmd   {$$ = astreeCreate(AST_CMDLIST, 0, $1, $3, 0, 0);}
+| dec lcmd            {$$ = astreeCreate(AST_CMDLIST, 0, $1, $2, 0, 0);}
+| cmd                 {$$ = astreeCreate(AST_CMDLIST, 0, $1, 0, 0, 0);}
 ;
 
-attribution: TK_IDENTIFIER '=' exp        //    {$$ = astreeCreate(AST_ATTRIBUTION, 0, $1, $3, 0, 0);}
-| TK_IDENTIFIER '[' exp ']' '=' exp       //    {$$ = astreeCreate(AST_ATTRIBUTION, 0, $1, $3, $6, 0);}
+attribution: TK_IDENTIFIER '=' exp           {$$ = astreeCreate(AST_ATTRIBUTION, $1, $3, 0, 0, 0);}
+| TK_IDENTIFIER '[' exp ']' '=' exp           {$$ = astreeCreate(AST_ATTRIBUTION, $1, 0, $3, $6, 0);}
 ;
 
-flux_control: KW_IF '(' exp ')' KW_THEN cmd          // {$$ = astreeCreate(AST_IF, 0, $3, $6, 0, 0);}
-| KW_IF '(' exp ')' KW_THEN cmd KW_ELSE cmd          // {$$ = astreeCreate(AST_ELSE, 0, $3, $6, $8, 0);}
-| KW_WHILE '(' exp ')' cmd                           // {$$ = astreeCreate(AST_WHILE, 0, $3, $5, 0, 0);}
-| KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp')' cmd  // {$$ = astreeCreate(AST_FOR, 0, $3, $5, $7, $9);}
+flux_control: KW_IF '(' exp ')' KW_THEN cmd           {$$ = astreeCreate(AST_IF, 0, $3, $6, 0, 0);}
+| KW_IF '(' exp ')' KW_THEN cmd KW_ELSE cmd           {$$ = astreeCreate(AST_ELSE, 0, $3, $6, $8, 0);}
+| KW_WHILE '(' exp ')' cmd                            {$$ = astreeCreate(AST_WHILE, 0, $3, $5, 0, 0);}
+| KW_FOR '(' TK_IDENTIFIER '=' exp KW_TO exp')' cmd   {$$ = astreeCreate(AST_FOR, $3, 0, $5, $7, $9);}
 ;
 
-inout: KW_PRINT print_elem       //  {$$ = astreeCreate(AST_CMDLIST, 0, $1, $2, 0, 0);}
-| KW_READ TK_IDENTIFIER          //  {$$ = astreeCreate(AST_CMDLIST, 0, $1, $2, 0, 0);}
-| KW_RETURN exp                  //  {$$ = astreeCreate(AST_CMDLIST, 0, $1, $2, 0, 0);}
+inout: KW_PRINT print_elem         {$$ = astreeCreate(AST_CMDLIST, 0, 0, $2, 0, 0);}
+| KW_READ TK_IDENTIFIER            {$$ = astreeCreate(AST_CMDLIST, $2, 0, 0, 0, 0);}
+| KW_RETURN exp                    {$$ = astreeCreate(AST_CMDLIST, 0, 0, $2, 0, 0);}
 ;
 
-print_elem: LIT_STRING           // {$$ = astreeCreate(AST_PRINT, 0, $1, 0, 0, 0);}
-| LIT_STRING print_elem          // {$$ = astreeCreate(AST_PRINT, 0, $1, $2, 0, 0);}
-| LIT_STRING ' ' print_elem      // {$$ = astreeCreate(AST_PRINT, 0, $1, $3, 0, 0);}
-| exp                            // {$$ = astreeCreate(AST_PRINT, 0, $1, 0, 0, 0);}
-| exp print_elem                 // {$$ = astreeCreate(AST_PRINT, 0, $1, $2, 0, 0);}
-| exp ' ' print_elem             // {$$ = astreeCreate(AST_PRINT, 0, $1, $3, 0, 0);}
+print_elem: LIT_STRING            {$$ = astreeCreate(AST_PRINT, 0, 0, 0, 0, 0);}
+| LIT_STRING print_elem           {$$ = astreeCreate(AST_PRINT, 0, 0, $2, 0, 0);}
+| LIT_STRING ' ' print_elem       {$$ = astreeCreate(AST_PRINT, 0, 0, $3, 0, 0);}
+| exp                             {$$ = astreeCreate(AST_PRINT, 0, $1, 0, 0, 0);}
+| exp print_elem                  {$$ = astreeCreate(AST_PRINT, 0, $1, $2, 0, 0);}
+| exp ' ' print_elem              {$$ = astreeCreate(AST_PRINT, 0, $1, $3, 0, 0);}
 ;
 
-exp: TK_IDENTIFIER                 //  {$$ = $1;}
-| TK_IDENTIFIER '[' exp ']'        //  {$$ = astreeCreate(AST_EXPR_VECTOR, 0, $1, $3, 0, 0);}
-| '#'TK_IDENTIFIER                 //  {$$ = astreeCreate(AST_HASHTAG, 0, $2, 0, 0, 0);}
-| '&'TK_IDENTIFIER                 //  {$$ = astreeCreate(AST_E, 0, $2, 0, 0, 0);}
-| LIT_INTEGER                      //  {$$ = astreeCreate(AST_SYMBOL, 0, $1, 0, 0, 0); }
-| LIT_CHAR                         //  {$$ = astreeCreate(AST_SYMBOL, 0, $1, 0, 0, 0); }
-| exp '+' exp                      //  {$$ = astreeCreate(AST_ADD, 0, $1, $3, 0, 0);}
-| exp '-' exp                      //  {$$ = astreeCreate(AST_SUB, 0, $1, $3, 0, 0);}
-| exp '*' exp                      //  {$$ = astreeCreate(AST_MULT, 0, $1, $3, 0, 0);}
-| exp '/' exp                      //  {$$ = astreeCreate(AST_DIV, 0, $1, $3, 0, 0);}
-| exp '<' exp                      //  {$$ = astreeCreate(AST_LESS, 0, $1, $3, 0, 0);}
-| exp '>' exp                      //  {$$ = astreeCreate(AST_GREATER, 0, $1, $3, 0, 0);}
-| '!' exp                          //  {$$ = astreeCreate(AST_NEG, 0, $2, 0 , 0, 0);}
-| '(' exp ')'                      //  {$$ = astreeCreate(AST_EXPR, 0, $2, 0 , 0, 0);}
-| exp OPERATOR_LE exp              //  {$$ = astreeCreate(AST_LE, 0, $1, $3, 0, 0);}
-| exp OPERATOR_GE exp              //  {$$ = astreeCreate(AST_GE, 0, $1, $3, 0, 0);}
-| exp OPERATOR_EQ exp              //  {$$ = astreeCreate(AST_EQ, 0, $1, $3, 0, 0);}
-| exp OPERATOR_NE exp              //  {$$ = astreeCreate(AST_NE, 0, $1, $3, 0, 0);}
-| exp OPERATOR_AND exp             //  {$$ = astreeCreate(AST_AND, 0, $1, $3, 0, 0);}
-| exp OPERATOR_OR exp              //  {$$ = astreeCreate(AST_OR, 0, $1, $3, 0, 0);}
-| TK_IDENTIFIER '(' paramlist ')'  //  {$$ = astreeCreate(AST_EXPR_FUNC, 0, $1, $3, 0, 0);}
+exp: TK_IDENTIFIER                   {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+| TK_IDENTIFIER '[' exp ']'          {$$ = astreeCreate(AST_EXPR_VECTOR, 0, 0, $3, 0, 0);}
+| '#'TK_IDENTIFIER                   {$$ = astreeCreate(AST_HASHTAG, 0, 0, 0, 0, 0);}
+| '&'TK_IDENTIFIER                   {$$ = astreeCreate(AST_E, 0, 0, 0, 0, 0);}
+| LIT_INTEGER                        {$$ = astreeCreate(AST_SYMBOL, 0, 0, 0, 0, 0); }
+| LIT_CHAR                           {$$ = astreeCreate(AST_SYMBOL, 0, 0, 0, 0, 0); }
+| exp '+' exp                        {$$ = astreeCreate(AST_ADD, 0, $1, $3, 0, 0);}
+| exp '-' exp                        {$$ = astreeCreate(AST_SUB, 0, $1, $3, 0, 0);}
+| exp '*' exp                        {$$ = astreeCreate(AST_MULT, 0, $1, $3, 0, 0);}
+| exp '/' exp                        {$$ = astreeCreate(AST_DIV, 0, $1, $3, 0, 0);}
+| exp '<' exp                        {$$ = astreeCreate(AST_LESS, 0, $1, $3, 0, 0);}
+| exp '>' exp                        {$$ = astreeCreate(AST_GREATER, 0, $1, $3, 0, 0);}
+| '!' exp                            {$$ = astreeCreate(AST_NEG, 0, $2, 0 , 0, 0);}
+| '(' exp ')'                        {$$ = astreeCreate(AST_EXPR, 0, $2, 0 , 0, 0);}
+| exp OPERATOR_LE exp                {$$ = astreeCreate(AST_LE, 0, $1, $3, 0, 0);}
+| exp OPERATOR_GE exp                {$$ = astreeCreate(AST_GE, 0, $1, $3, 0, 0);}
+| exp OPERATOR_EQ exp                {$$ = astreeCreate(AST_EQ, 0, $1, $3, 0, 0);}
+| exp OPERATOR_NE exp                {$$ = astreeCreate(AST_NE, 0, $1, $3, 0, 0);}
+| exp OPERATOR_AND exp               {$$ = astreeCreate(AST_AND, 0, $1, $3, 0, 0);}
+| exp OPERATOR_OR exp                {$$ = astreeCreate(AST_OR, 0, $1, $3, 0, 0);}
+| TK_IDENTIFIER '(' paramlist ')'    {$$ = astreeCreate(AST_EXPR_FUNC, 0, 0, $3, 0, 0);}
 ;
 
 

@@ -51,6 +51,15 @@
 #define AST_EXPR_FUNC 43
 #define AST_ONEARG 44
 
+#define AST_CHAR 45
+#define AST_INT 46
+#define AST_PARAML 47
+#define AST_REST 48
+#define AST_CMD 49
+#define AST_ATTRIBUTION 50
+#define AST_E 51
+#define AST_HASHTAG 52
+
 
 typedef struct s_astree
 	{
