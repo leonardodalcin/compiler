@@ -1738,7 +1738,7 @@ yyreduce:
 
   case 40:
 #line 146 "parser.y"
-    {(yyval.astree) = astreeCreate(AST_CMDLIST, 0, (yyvsp[(1) - (3)].astree), (yyvsp[(3) - (3)].astree), 0, 0);}
+    {(yyval.astree) = astreeCreate(AST_CMDLIST, 0, (yyvsp[(1) - (3)].astree), 0, (yyvsp[(3) - (3)].astree), 0);}
     break;
 
   case 41:
@@ -1793,7 +1793,7 @@ yyreduce:
 
   case 51:
 #line 163 "parser.y"
-    {(yyval.astree) = astreeCreate(AST_CMDLIST, 0, (yyvsp[(2) - (2)].astree), 0, 0, 0);}
+    {(yyval.astree) = astreeCreate(AST_CMDLIST, 0, 0, 0, (yyvsp[(2) - (2)].astree), 0);}
     break;
 
   case 52:
@@ -1848,12 +1848,12 @@ yyreduce:
 
   case 62:
 #line 178 "parser.y"
-    {(yyval.astree) = astreeCreate(AST_SYMBOL, 0, 0, 0, 0, 0); }
+    {(yyval.astree) = astreeCreate(AST_SYMBOL, (yyvsp[(1) - (1)].symbol), 0, 0, 0, 0); }
     break;
 
   case 63:
 #line 179 "parser.y"
-    {(yyval.astree) = astreeCreate(AST_SYMBOL, 0, 0, 0, 0, 0); }
+    {(yyval.astree) = astreeCreate(AST_SYMBOL, (yyvsp[(1) - (1)].symbol), 0, 0, 0, 0); }
     break;
 
   case 64:

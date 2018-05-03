@@ -143,7 +143,7 @@ cmd: attribution  {$$ = astreeCreate(AST_CMD, 0, $1, 0, 0, 0);}
 body: '{' lcmd '}'  {$$ = astreeCreate(AST_BLOCO, 0, $2, 0, 0, 0);}
 ;
 
-lcmd: cmd ';' lcmd   {$$ = astreeCreate(AST_CMDLIST, 0, $1, $3, 0, 0);}
+lcmd: cmd ';' lcmd   {$$ = astreeCreate(AST_CMDLIST, 0, $1, 0, $3, 0);}
 | dec lcmd            {$$ = astreeCreate(AST_CMDLIST, 0, $1, $2, 0, 0);}
 | cmd                 {$$ = astreeCreate(AST_CMDLIST, 0, $1, 0, 0, 0);}
 ;
@@ -160,7 +160,7 @@ flux_control: KW_IF '(' exp ')' KW_THEN cmd           {$$ = astreeCreate(AST_IF,
 
 inout: KW_PRINT print_elem         {$$ = astreeCreate(AST_CMDLIST, 0, 0, $2, 0, 0);}
 | KW_READ name            {$$ = astreeCreate(AST_CMDLIST, 0, $2, 0, 0, 0);}
-| KW_RETURN exp                    {$$ = astreeCreate(AST_CMDLIST, 0, $2, 0, 0, 0);}
+| KW_RETURN exp                    {$$ = astreeCreate(AST_CMDLIST, 0, 0, 0, $2, 0);}
 ;
 
 print_elem: LIT_STRING            {$$ = astreeCreate(AST_PRINT, 0, 0, 0, 0, 0);}
@@ -175,8 +175,8 @@ exp: name                 			 {$$ = $1;}
 | name '[' exp ']'        			 {$$ = astreeCreate(AST_EXPR_VECTOR, 0, $1, $3, 0, 0);}
 | '#' name                			 {$$ = astreeCreate(AST_HASHTAG, 0, $2, 0, 0, 0);}
 | '&' name          	   		     {$$ = astreeCreate(AST_E, 0, $2, 0, 0, 0);}
-| LIT_INTEGER                        {$$ = astreeCreate(AST_SYMBOL, 0, 0, 0, 0, 0); }
-| LIT_CHAR                           {$$ = astreeCreate(AST_SYMBOL, 0, 0, 0, 0, 0); }
+| LIT_INTEGER                        {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
+| LIT_CHAR                           {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
 | exp '+' exp                        {$$ = astreeCreate(AST_ADD, 0, $1, $3, 0, 0);}
 | exp '-' exp                        {$$ = astreeCreate(AST_SUB, 0, $1, $3, 0, 0);}
 | exp '*' exp                        {$$ = astreeCreate(AST_MULT, 0, $1, $3, 0, 0);}

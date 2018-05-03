@@ -1,0 +1,1 @@
+int a =0 ;int i =0 ;int v [] :0 ;int 0 0 0 0 0 0 0 0 0 int mat [];int float f =10.55 ;char c ='x' ;char d =65 ;int #pt =0 ;
