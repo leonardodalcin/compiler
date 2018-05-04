@@ -62,7 +62,7 @@
 #define AST_DEC_POINTER 53
 #define AST_DEC_FUNC 54
 #define AST_PRINTL 55
-
+#define ASTREE_INIT_LIST 56
 
 typedef struct s_astree
 	{

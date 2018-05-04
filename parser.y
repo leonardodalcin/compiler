@@ -25,6 +25,7 @@ extern FILE *yyin;
 %type<astree> decfunction
 %type<astree> decpointer
 %type<astree> decv
+%type<astree> decvl
 %type<astree> typevar
 %type<astree> literal
 %type<astree> paramlist
@@ -94,18 +95,22 @@ dec: decvar       {$$ = astreeCreate(AST_DECLARACAO, 0, $1, 0, 0, 0);}
 decvar: typevar name '=' literal ';'       {$$ = astreeCreate(AST_VAR, 0, $1, $2, $4, 0);}
 ;
 
-decvetor: typevar name '[' LIT_INTEGER ']' ':' decv ';'    {$$ = astreeCreate(AST_VECTOR_INIT, $4, $1, $2, $7, 0);}
-| typevar name '[' LIT_INTEGER ']' ';'                     {$$ = astreeCreate(AST_VECTOR_INIT, $4, $1, $2, 0, 0);}
+decvetor: typevar name '[' LIT_INTEGER ']' ':' decvl ';'    {$$ = astreeCreate(AST_VECTOR_INIT, $4, $1, $2, $7, astreeCreate(AST_SYMBOL, $4, 0, 0, 0, 0));}
+| typevar name '[' LIT_INTEGER ']' ';'                     {$$ = astreeCreate(AST_VECTOR_INIT, $4, $1, $2, 0, astreeCreate(AST_SYMBOL, $4, 0, 0, 0, 0));}
 ;
 
 decfunction: typevar name '(' paramlist ')' body    {$$ = astreeCreate(AST_DEC_FUNC, 0, $1, $2, $4, $6);}
 
 decpointer: typevar '#' name '=' literal ';'    {$$ = astreeCreate(AST_DEC_POINTER, 0, $1, $3, $5, 0);}
 
-decv:	LIT_INTEGER decv  {$$ = astreeCreate(AST_SYMBOL, $1, $2, 0, 0, 0);}
-| LIT_CHAR decv           {$$ = astreeCreate(AST_SYMBOL, $1, $2, 0, 0, 0);}
-| LIT_REAL decv           {$$ = astreeCreate(AST_SYMBOL, $1, $2, 0, 0, 0);}
-| ' ' decv                {$$ = astreeCreate(AST_SYMBOL, 0, $2, 0, 0, 0);}
+decvl: decv decvl  { $$ = astreeCreate(ASTREE_INIT_LIST, 0, $1, $2, 0, 0); }
+  | { $$ = 0; }
+;
+
+decv:	LIT_INTEGER  {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+| LIT_CHAR           {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+| LIT_REAL           {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+| ' '                {$$ = astreeCreate(AST_SYMBOL, 0, 0, 0, 0, 0);}
 | {$$ = 0;}
 ;
 

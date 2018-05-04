@@ -79,6 +79,7 @@ void nodeType(ASTREE *node) {
         nodeType(node->son[0]);
         nodeType(node->son[1]);
         fprintf(FileTree, "[");
+        nodeType(node->son[3]);
         fprintf(FileTree, "] :");
         nodeType(node->son[2]);
         fprintf(FileTree, ";\n");
@@ -87,10 +88,19 @@ void nodeType(ASTREE *node) {
         nodeType(node->son[0]);
         nodeType(node->son[1]);
         fprintf(FileTree, "[");
+          nodeType(node->son[3]);
         fprintf(FileTree, "]");
         fprintf(FileTree, ";\n");
       }
 
+//          decvetor: typevar name '[' LIT_INTEGER ']' ':' decv ';'    {$$ = astreeCreate(AST_VECTOR_INIT, $4, $1, $2, $7, 0);}
+//          | typevar name '[' LIT_INTEGER ']' ';'                     {$$ = astreeCreate(AST_VECTOR_INIT, $4, $1, $2, 0, 0);}
+
+    case ASTREE_INIT_LIST:
+      nodeType(node->son[0]);
+      fprintf(FileTree, " ");
+      nodeType(node->son[1]);
+      break;
 
     case AST_INT:
       printf("AST_INT\n");
