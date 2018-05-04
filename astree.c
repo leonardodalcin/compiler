@@ -177,12 +177,15 @@ switch(node->type)
 
     case AST_CMDLIST:
       printf("AST_CMDLIST\n");
-      if(node->son[3]) fprintf(FileTree, "read ");
-      if(node->son[2] && !node->son[0]) fprintf(FileTree, "return ");
-      if(node->son[1] && !node->son[0]) {
+      if(node->son[3]) {
+        fprintf(FileTree, "read ");
+        nodeType(node->son[3]);
+      } else if(node->son[2] && !node->son[0]) {
+        fprintf(FileTree, "return ");
+        nodeType(node->son[2]);
+      } else if(node->son[1] && !node->son[0]) {
         fprintf(FileTree, "print ");
         nodeType(node->son[1]);
-
       }else if(node->son[2]) {
         nodeType(node->son[0]);
         fprintf(FileTree, ";");

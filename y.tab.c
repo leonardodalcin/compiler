@@ -1803,7 +1803,7 @@ yyreduce:
 
   case 53:
 #line 167 "parser.y"
-    {(yyval.astree) = astreeCreate(AST_PRINT, (yyvsp[(1) - (2)].symbol), 0, (yyvsp[(2) - (2)].astree), 0, 0);}
+    {(yyval.astree) = astreeCreate(AST_PRINT, 0, 0, (yyvsp[(2) - (2)].astree), 0, 0);}
     break;
 
   case 54:
@@ -1823,7 +1823,7 @@ yyreduce:
 
   case 57:
 #line 171 "parser.y"
-    {(yyval.astree) = astreeCreate(AST_PRINT, 0, (yyvsp[(1) - (3)].astree), (yyvsp[(3) - (3)].astree), 0, 0);}
+    {(yyval.astree) = astreeCreate(AST_PRINT, 0, (yyvsp[(1) - (3)].astree), 0, (yyvsp[(3) - (3)].astree), 0);}
     break;
 
   case 58:
