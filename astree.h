@@ -27,7 +27,7 @@
 #define AST_EMPTY 19
 #define AST_READ 20
 #define AST_PRINT 21
-#define AST_RETURN 22
+#define AST_RET 22
 #define AST_BLOCO 23
 #define AST_BYTE 24
 #define AST_SHORT 25

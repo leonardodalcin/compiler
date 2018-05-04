@@ -38,6 +38,7 @@ extern FILE *yyin;
 %type<astree> exp
 %type<astree> print_elem
 %type<astree> name
+%type<astree> stringSymbol
 
 
 %token KW_CHAR
@@ -158,17 +159,20 @@ flux_control: KW_IF '(' exp ')' KW_THEN cmd           {$$ = astreeCreate(AST_IF,
 | KW_FOR '(' name '=' exp KW_TO exp')' cmd   {$$ = astreeCreate(AST_FOR, 0, $3, $5, $7, $9);}
 ;
 
-inout: KW_PRINT print_elem         {$$ = astreeCreate(AST_CMDLIST, 0, 0, $2, 0, 0);}
-| KW_READ name            {$$ = astreeCreate(AST_CMDLIST, 0, 0, 0, 0, $2);}
-| KW_RETURN exp                    {$$ = astreeCreate(AST_CMDLIST, 0, 0, 0, $2, 0);}
+inout: KW_PRINT print_elem         {$$ = astreeCreate(AST_PRINT, 0, $2, 0, 0, 0);}
+| KW_READ name            {$$ = astreeCreate(AST_READ, 0, $2, 0, 0, 0);}
+| KW_RETURN exp                    {$$ = astreeCreate(AST_RET, 0, $2, 0, 0, 0);}
 ;
 
-print_elem: LIT_STRING            {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
-| LIT_STRING print_elem           {$$ = astreeCreate(AST_PRINT, 0, 0, $2, 0, 0);}
-| LIT_STRING ' ' print_elem       {$$ = astreeCreate(AST_PRINT, 0, 0, $3, 0, 0);}
-| exp                             {$$ = astreeCreate(AST_PRINT, 0, $1, 0, 0, 0);}
-| exp print_elem                  {$$ = astreeCreate(AST_PRINT, 0, $1, $2, 0, 0);}
-| exp ' ' print_elem              {$$ = astreeCreate(AST_PRINT, 0, $1, 0, $3, 0);}
+stringSymbol: LIT_STRING {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+;
+
+print_elem: stringSymbol            {$$ = astreeCreate(AST_PRINTL,0, $1, 0, 0, 0);}
+| stringSymbol print_elem           {$$ = astreeCreate(AST_PRINTL,0, $1, $2, 0, 0);}
+| stringSymbol ' ' print_elem       {$$ = astreeCreate(AST_PRINTL,0, $1, $3, 0, 0);}
+| exp                             {$$ = astreeCreate(AST_PRINTL, 0, $1, 0, 0, 0);}
+| exp print_elem                  {$$ = astreeCreate(AST_PRINTL, 0, $1, $2, 0, 0);}
+| exp ' ' print_elem              {$$ = astreeCreate(AST_PRINTL, 0, $1, $3, 0, 0);}
 ;
 
 exp: name                 			 {$$ = $1;}
