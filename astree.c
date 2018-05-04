@@ -178,17 +178,19 @@ void nodeType(ASTREE *node) {
     case AST_READ:
       fprintf(FileTree, "read ");
       nodeType(node->son[0]);
-      fprintf(FileTree, "; \n");
+      break;
 
 
     case AST_RET:
       fprintf(FileTree, "return ");
       nodeType(node->son[0]);
-      fprintf(FileTree, "; \n");
+      break;
+
 
     case AST_PRINT:
       fprintf(FileTree, "print ");
       nodeType(node->son[0]);
+      break;
 
 
 
