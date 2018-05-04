@@ -159,16 +159,16 @@ flux_control: KW_IF '(' exp ')' KW_THEN cmd           {$$ = astreeCreate(AST_IF,
 ;
 
 inout: KW_PRINT print_elem         {$$ = astreeCreate(AST_CMDLIST, 0, 0, $2, 0, 0);}
-| KW_READ name            {$$ = astreeCreate(AST_CMDLIST, 0, $2, 0, 0, 0);}
+| KW_READ name            {$$ = astreeCreate(AST_CMDLIST, 0, 0, 0, 0, $2);}
 | KW_RETURN exp                    {$$ = astreeCreate(AST_CMDLIST, 0, 0, 0, $2, 0);}
 ;
 
-print_elem: LIT_STRING            {$$ = astreeCreate(AST_PRINT, 0, 0, 0, 0, 0);}
+print_elem: LIT_STRING            {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
 | LIT_STRING print_elem           {$$ = astreeCreate(AST_PRINT, 0, 0, $2, 0, 0);}
 | LIT_STRING ' ' print_elem       {$$ = astreeCreate(AST_PRINT, 0, 0, $3, 0, 0);}
 | exp                             {$$ = astreeCreate(AST_PRINT, 0, $1, 0, 0, 0);}
 | exp print_elem                  {$$ = astreeCreate(AST_PRINT, 0, $1, $2, 0, 0);}
-| exp ' ' print_elem              {$$ = astreeCreate(AST_PRINT, 0, $1, $3, 0, 0);}
+| exp ' ' print_elem              {$$ = astreeCreate(AST_PRINT, 0, $1, 0, $3, 0);}
 ;
 
 exp: name                 			 {$$ = $1;}
@@ -191,7 +191,7 @@ exp: name                 			 {$$ = $1;}
 | exp OPERATOR_NE exp                {$$ = astreeCreate(AST_NE, 0, $1, $3, 0, 0);}
 | exp OPERATOR_AND exp               {$$ = astreeCreate(AST_AND, 0, $1, $3, 0, 0);}
 | exp OPERATOR_OR exp                {$$ = astreeCreate(AST_OR, 0, $1, $3, 0, 0);}
-| TK_IDENTIFIER '(' paramlist ')'    {$$ = astreeCreate(AST_EXPR_FUNC, 0, 0, $3, 0, 0);}
+| name '(' paramlist ')'    {$$ = astreeCreate(AST_EXPR_FUNC, 0, $1, $3, 0, 0);}
 ;
 
 

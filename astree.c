@@ -34,7 +34,6 @@ void astreePrint(ASTREE *node)
 
 void nodeType(ASTREE *node)
 {
-  printf("NODE TYPE: %d\n", node->type);
   int i = 0;
 	if(!node)
 		return;
@@ -42,7 +41,6 @@ void nodeType(ASTREE *node)
 		return;
 	else
 		node -> verif = 1;
-  printf("NODE TYPE: %d\n", node->type);
 switch(node->type)
 
 
@@ -51,9 +49,14 @@ switch(node->type)
 
 	{
 		case AST_SYMBOL:
-		if (node->symbol)
-			if(node->symbol->yytext)
-				fprintf(FileTree, "%s ", node->symbol->yytext);
+      printf("AST_SYMBOL:\n");
+      if (node->symbol) {
+        if (node->symbol->yytext) {
+          printf("AST_SYMBOL: %s\n", node->symbol->yytext);
+          fprintf(FileTree, "%s ", node->symbol->yytext);
+        }
+      }
+
  		break;
 
 		case AST_DECLARACAO:
@@ -90,17 +93,17 @@ switch(node->type)
 
 
     case AST_INT:
-      printf("AST_INT");
+      printf("AST_INT\n");
       fprintf(FileTree, "int ");
       break;
 
     case AST_CHAR:
-      printf("AST_CHAR");
+      printf("AST_CHAR\n");
       fprintf(FileTree, "char ");
       break;
 
     case AST_FLOAT:
-      printf("AST_FLOAT");
+      printf("AST_FLOAT\n");
       fprintf(FileTree, "float ");
       break;
 
@@ -174,21 +177,28 @@ switch(node->type)
 
     case AST_CMDLIST:
       printf("AST_CMDLIST\n");
+      if(node->son[3]) fprintf(FileTree, "read ");
+      if(node->son[2] && !node->son[0]) fprintf(FileTree, "return ");
+      if(node->son[1] && !node->son[0]) {
+        fprintf(FileTree, "print ");
+        nodeType(node->son[1]);
 
-      if(node->son[2]) {
+      }else if(node->son[2]) {
         nodeType(node->son[0]);
         fprintf(FileTree, ";");
         nodeType(node->son[2]);
       } else if (node->son[1]) {
         nodeType(node->son[0]);
         nodeType(node->son[1]);
-
       }else {
         nodeType(node->son[0]);
-
       }
 
       break;
+//    inout: KW_PRINT print_elem         {$$ = astreeCreate(AST_CMDLIST, 0, 0, $2, 0, 0);}
+//      | KW_READ name            {$$ = astreeCreate(AST_CMDLIST, 0, 0, 0, 0, $2);}
+//      | KW_RETURN exp                    {$$ = astreeCreate(AST_CMDLIST, 0, 0, 0, $2, 0);}
+
 //    lcmd: cmd ';' lcmd   {$$ = astreeCreate(AST_CMDLIST, 0, $1, 0, $3, 0);}
 //
 //      | dec lcmd            {$$ = astreeCreate(AST_CMDLIST, 0, $1, $2, 0, 0);}
@@ -281,18 +291,11 @@ switch(node->type)
 //      ;
 
     case AST_PRINT:
-      if(node->son[1]) {
-        fprintf(FileTree, "print ");
-        nodeType(node->son[1]);
-
-      } else  if(node->son[0]) {
-        fprintf(FileTree, "read ");
         nodeType(node->son[0]);
-      }else{
-        fprintf(FileTree, "return ");
-        nodeType(node->son[2]);
-
-      }
+      break;
+    case AST_PRINTL:
+      nodeType(node->son[0]);
+      fprintf(FileTree, " ");
       break;
 //    print_elem: LIT_STRING            {$$ = astreeCreate(AST_PRINT, 0, 0, 0, 0, 0);}
 //      | LIT_STRING print_elem           {$$ = astreeCreate(AST_PRINT, 0, 0, $2, 0, 0);}
@@ -301,6 +304,7 @@ switch(node->type)
 //      | exp print_elem                  {$$ = astreeCreate(AST_PRINT, 0, $1, $2, 0, 0);}
 //      | exp ' ' print_elem              {$$ = astreeCreate(AST_PRINT, 0, $1, $3, 0, 0);}
 //      ;
+
     case AST_EXPR_VECTOR:
       nodeType(node->son[0]);
       fprintf(FileTree, "[");
@@ -360,6 +364,15 @@ switch(node->type)
       fprintf(FileTree, ")");
 
       break;
+
+    case AST_EXPR_FUNC:
+      nodeType(node->son[1]);
+
+      fprintf(FileTree, "(");
+
+
+      nodeType(node->son[0]);
+      fprintf(FileTree, ")");
 
     default:
       nodeType(node->son[0]);
