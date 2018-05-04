@@ -210,22 +210,19 @@ void nodeType(ASTREE *node) {
 
     case AST_ATTRIBUTION:
       printf("AST_ATTRIBUTION\n");
-
-      if (node->son[2]) {
+      if(node->son[2]) {
         nodeType(node->son[0]);
         fprintf(FileTree, "[");
         nodeType(node->son[1]);
         fprintf(FileTree, "] =");
-        nodeType(node->son[3]);
-
-
+        nodeType(node->son[2]);
       } else {
         nodeType(node->son[0]);
         fprintf(FileTree, "=");
         nodeType(node->son[1]);
       }
-
       break;
+
 //    attribution: name '=' exp           {$$ = astreeCreate(AST_ATTRIBUTION, 0, $1, $3, 0, 0);}
 //      | name '[' exp ']' '=' exp           {$$ = astreeCreate(AST_ATTRIBUTION, 0, $1, $3, $6, 0);}
 //      ;
