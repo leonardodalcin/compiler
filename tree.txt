@@ -1,1 +1,6 @@
-int main (){print ;}"mais um" 
+int main (){print "Incrementado algumas vezes fica " ;
+if (a ==5 ) then print "Parou no meio\n" ;
+if (a ==11 ) then ;
+if (a ==11 ) then else ;
+}int incn (int x ,int n ){return x +n ;
+}

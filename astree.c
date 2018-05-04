@@ -3,52 +3,49 @@
 #include <stdlib.h>
 #include "hash.h"
 
-ASTREE* astreeCreate(int type, HASH_ELEMENT *symbol, ASTREE* son0, ASTREE* son1, ASTREE* son2, ASTREE* son3)
-{
-	ASTREE *newnode = 0;
+ASTREE *astreeCreate(int type, HASH_ELEMENT *symbol, ASTREE *son0, ASTREE *son1, ASTREE *son2, ASTREE *son3) {
+  ASTREE *newnode = 0;
 
-	newnode = calloc(1,sizeof(ASTREE));
-	newnode->type = type;
-	newnode->symbol = symbol;
-	newnode->son[0] = son0;
-	newnode->son[1] = son1;
-	newnode->son[2] = son2;
-	newnode->son[3] = son3;
-	return newnode;
+  newnode = calloc(1, sizeof(ASTREE));
+  newnode->type = type;
+  newnode->symbol = symbol;
+  newnode->son[0] = son0;
+  newnode->son[1] = son1;
+  newnode->son[2] = son2;
+  newnode->son[3] = son3;
+  return newnode;
 };
 
-void astreePrint(ASTREE *node)
-{
-	int i=0;
-	if(!node){
-		printf("NODE NULO\n");
-		return;
-	}
-
-	nodeType(node);
-
-	for(i=0; i<MAX_SONS; i++)
-		if(node->son[i]) {astreePrint(node->son[i]);}
-
-};
-
-void nodeType(ASTREE *node)
-{
+void astreePrint(ASTREE *node) {
   int i = 0;
-	if(!node)
-		return;
-	if(node->verif)
-		return;
-	else
-		node -> verif = 1;
-switch(node->type)
+  if (!node) {
+    printf("NODE NULO\n");
+    return;
+  }
+
+  nodeType(node);
+
+  for (i = 0; i < MAX_SONS; i++)
+    if (node->son[i]) { astreePrint(node->son[i]); }
+
+};
+
+void nodeType(ASTREE *node) {
+  int i = 0;
+  if (!node)
+    return;
+  if (node->verif)
+    return;
+  else
+    node->verif = 1;
+  switch (node->type)
 
 
 /// erros: a = incn (a , 1 , )
 /// a = a (b , c , d , a , a , )
 
-	{
-		case AST_SYMBOL:
+  {
+    case AST_SYMBOL:
       printf("AST_SYMBOL:\n");
       if (node->symbol) {
         if (node->symbol->yytext) {
@@ -57,38 +54,41 @@ switch(node->type)
         }
       }
 
- 		break;
+      break;
 
-		case AST_DECLARACAO:
+    case AST_DECLARACAO:
       printf("AST_DECLARACAO, NODE[0] %d\n", node->son[0]->type);
-			nodeType(node->son[0]);
-		break;
+      nodeType(node->son[0]);
+
+      break;
 
     case AST_VAR:
-      printf("AST_VAR, NODE[0] %d - NODE[1] %d - NODE[2] %d \n", node->son[0]->type, node->son[1]->type, node->son[2]->type);
+      printf("AST_VAR, NODE[0] %d - NODE[1] %d - NODE[2] %d \n", node->son[0]->type, node->son[1]->type,
+             node->son[2]->type);
       nodeType(node->son[0]);
       nodeType(node->son[1]);
-      fprintf(FileTree,"=");
+      fprintf(FileTree, "=");
       nodeType(node->son[2]);
-      fprintf(FileTree,";");
+      fprintf(FileTree, ";\n");
+
       break;
 
     case AST_VECTOR_INIT:
       printf("AST_VECTOR_INIT, NODE[0] %d - NODE[1] %d - NODE[2] %d \n", node->son[0]->type, node->son[1]->type);
-      if(node->son[2]) {
+      if (node->son[2]) {
         nodeType(node->son[0]);
         nodeType(node->son[1]);
-        fprintf(FileTree,"[");
-        fprintf(FileTree,"] :");
+        fprintf(FileTree, "[");
+        fprintf(FileTree, "] :");
         nodeType(node->son[2]);
-        fprintf(FileTree,";");
+        fprintf(FileTree, ";\n");
 
       } else {
         nodeType(node->son[0]);
         nodeType(node->son[1]);
-        fprintf(FileTree,"[");
-        fprintf(FileTree,"]");
-        fprintf(FileTree,";");
+        fprintf(FileTree, "[");
+        fprintf(FileTree, "]");
+        fprintf(FileTree, ";\n");
       }
 
 
@@ -114,7 +114,7 @@ switch(node->type)
       nodeType(node->son[1]);
       fprintf(FileTree, "=");
       nodeType(node->son[2]);
-      fprintf(FileTree, ";");
+      fprintf(FileTree, ";\n");
 //    decpointer: typevar '#' name '=' literal ';'    {$$ = astreeCreate(AST_DEC_POINTER, 0, $1, $3, $5, 0);}
       break;
     case AST_DEC_FUNC:
@@ -136,7 +136,7 @@ switch(node->type)
       nodeType(node->son[0]);
       nodeType(node->son[1]);
       nodeType(node->son[2]);
-      if(node->son[3]) nodeType(node->son[3]);
+      if (node->son[3]) nodeType(node->son[3]);
       break;
     case AST_REST:
       printf("AST_REST\n");
@@ -144,7 +144,7 @@ switch(node->type)
 
       nodeType(node->son[0]);
       nodeType(node->son[1]);
-      if(node->son[2]) nodeType(node->son[2]);
+      if (node->son[2]) nodeType(node->son[2]);
       break;
 //        rest: ',' typevar name rest    {$$ = astreeCreate(AST_REST, 0, $2, $3, $4, 0);}
 //      | ',' literal rest                      {$$ = astreeCreate(AST_REST, 0, $2, $3, 0, 0);}
@@ -177,23 +177,23 @@ switch(node->type)
 
     case AST_CMDLIST:
       printf("AST_CMDLIST\n");
-      if(node->son[3]) {
+      if (node->son[3]) {
         fprintf(FileTree, "read ");
         nodeType(node->son[3]);
-      } else if(node->son[2] && !node->son[0]) {
+      } else if (node->son[2] && !node->son[0]) {
         fprintf(FileTree, "return ");
         nodeType(node->son[2]);
-      } else if(node->son[1] && !node->son[0]) {
+      } else if (node->son[1] && !node->son[0]) {
         fprintf(FileTree, "print ");
         nodeType(node->son[1]);
-      }else if(node->son[2]) {
+      } else if (node->son[2]) {
         nodeType(node->son[0]);
-        fprintf(FileTree, ";");
+        fprintf(FileTree, ";\n");
         nodeType(node->son[2]);
       } else if (node->son[1]) {
         nodeType(node->son[0]);
         nodeType(node->son[1]);
-      }else {
+      } else {
         nodeType(node->son[0]);
       }
 
@@ -211,7 +211,7 @@ switch(node->type)
     case AST_ATTRIBUTION:
       printf("AST_ATTRIBUTION\n");
 
-      if(node->son[2]) {
+      if (node->son[2]) {
         nodeType(node->son[0]);
         fprintf(FileTree, "[");
         nodeType(node->son[1]);
@@ -234,7 +234,7 @@ switch(node->type)
       printf("AST_IF\n");
       fprintf(FileTree, "if (");
       nodeType(node->son[0]);
-      fprintf(FileTree, ") then");
+      fprintf(FileTree, ") then ");
       nodeType(node->son[1]);
 
       break;
@@ -242,7 +242,7 @@ switch(node->type)
       printf("AST_ELSE\n");
       fprintf(FileTree, "if (");
       nodeType(node->son[0]);
-      fprintf(FileTree, ") then");
+      fprintf(FileTree, ") then ");
       nodeType(node->son[1]);
       fprintf(FileTree, "else ");
       nodeType(node->son[2]);
@@ -260,7 +260,7 @@ switch(node->type)
     case AST_FOR:
       printf("AST_WHILE\n");
       fprintf(FileTree, "for (");
-      nodeType(node->son[0 ]);
+      nodeType(node->son[0]);
       fprintf(FileTree, " = ");
       nodeType(node->son[1]);
       fprintf(FileTree, " to ");
@@ -294,7 +294,7 @@ switch(node->type)
 //      ;
 
     case AST_PRINT:
-        nodeType(node->son[0]);
+      nodeType(node->son[0]);
       break;
     case AST_PRINTL:
       nodeType(node->son[0]);
@@ -376,20 +376,49 @@ switch(node->type)
 
       nodeType(node->son[0]);
       fprintf(FileTree, ")");
-
-    default:
+    case AST_LE:
       nodeType(node->son[0]);
       nodeType(node->son[1]);
+
       break;
-//      | exp OPERATOR_LE exp                {$$ = astreeCreate(AST_LE, 0, $1, $3, 0, 0);}
-//      | exp OPERATOR_GE exp                {$$ = astreeCreate(AST_GE, 0, $1, $3, 0, 0);}
-//      | exp OPERATOR_EQ exp                {$$ = astreeCreate(AST_EQ, 0, $1, $3, 0, 0);}
-//      | exp OPERATOR_NE exp                {$$ = astreeCreate(AST_NE, 0, $1, $3, 0, 0);}
-//      | exp OPERATOR_AND exp               {$$ = astreeCreate(AST_AND, 0, $1, $3, 0, 0);}
-//      | exp OPERATOR_OR exp                {$$ = astreeCreate(AST_OR, 0, $1, $3, 0, 0);}
+    case AST_GE:
+      nodeType(node->son[0]);
+      fprintf(FileTree, ">=");
 
+      nodeType(node->son[1]);
 
-//      printf("DEFAULT: %d\n", node->type);
+      break;
+    case AST_EQ:
+      nodeType(node->son[0]);
+      fprintf(FileTree, "==");
+
+      nodeType(node->son[1]);
+
+      break;
+    case AST_NE:
+      nodeType(node->son[0]);
+      fprintf(FileTree, "!=");
+
+      nodeType(node->son[1]);
+
+      break;
+    case AST_AND:
+      nodeType(node->son[0]);
+      fprintf(FileTree, "&&");
+
+      nodeType(node->son[1]);
+
+      break;
+    case AST_OR:
+      nodeType(node->son[0]);
+      fprintf(FileTree, "||");
+
+      nodeType(node->son[1]);
+
+      break;
+    default:
+
+      break;
 
   }
 };
