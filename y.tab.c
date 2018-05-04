@@ -1668,12 +1668,12 @@ yyreduce:
 
   case 26:
 #line 122 "parser.y"
-    {(yyval.astree) = astreeCreate(AST_PARAML, 0, (yyvsp[(1) - (2)].astree), (yyvsp[(2) - (2)].astree), 0, 0);}
+    {(yyval.astree) = astreeCreate(AST_PARAML, 0, (yyvsp[(1) - (2)].astree), 0, (yyvsp[(2) - (2)].astree), 0);}
     break;
 
   case 27:
 #line 123 "parser.y"
-    {(yyval.astree) = astreeCreate(AST_PARAML, 0, (yyvsp[(1) - (2)].astree), (yyvsp[(2) - (2)].astree), 0, 0);}
+    {(yyval.astree) = astreeCreate(AST_PARAML, 0, (yyvsp[(1) - (2)].astree), 0, (yyvsp[(2) - (2)].astree), 0);}
     break;
 
   case 28:

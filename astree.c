@@ -135,8 +135,8 @@ void nodeType(ASTREE *node) {
       printf("AST_PARAML\n");
       nodeType(node->son[0]);
       nodeType(node->son[1]);
-      nodeType(node->son[2]);
-      if (node->son[3]) nodeType(node->son[3]);
+      if (node->son[2])nodeType(node->son[2]);
+      nodeType(node->son[3]);
       break;
     case AST_REST:
       printf("AST_REST\n");
@@ -358,21 +358,18 @@ void nodeType(ASTREE *node) {
       break;
     case AST_EXPR:
       fprintf(FileTree, "(");
-
-
       nodeType(node->son[0]);
       fprintf(FileTree, ")");
 
       break;
 
     case AST_EXPR_FUNC:
-      nodeType(node->son[1]);
-
+      nodeType(node->son[0]);
       fprintf(FileTree, "(");
 
-
-      nodeType(node->son[0]);
+      nodeType(node->son[1]);
       fprintf(FileTree, ")");
+
     case AST_LE:
       nodeType(node->son[0]);
       nodeType(node->son[1]);

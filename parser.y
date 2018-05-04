@@ -119,13 +119,13 @@ literal: LIT_INTEGER  {$$ = astreeCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
 ;
 
 paramlist: typevar name rest  {$$ = astreeCreate(AST_PARAML, 0, $1, $2, $3, 0);}
-| literal rest                         {$$ = astreeCreate(AST_PARAML, 0, $1, $2, 0, 0);}
-| name rest                   {$$ = astreeCreate(AST_PARAML, 0, $1, $2, 0, 0);}
+| literal rest                {$$ = astreeCreate(AST_PARAML, 0, $1, 0, $2, 0);}
+| name rest                   {$$ = astreeCreate(AST_PARAML, 0, $1, 0, $2, 0);}
 | {$$ = 0;}
 ;
 
 rest: ',' typevar name rest    {$$ = astreeCreate(AST_REST, 0, $2, $3, $4, 0);}
-| ',' literal rest                      {$$ = astreeCreate(AST_REST, 0, $2, $3, 0, 0);}
+| ',' literal rest             {$$ = astreeCreate(AST_REST, 0, $2, $3, 0, 0);}
 | ',' name rest                {$$ = astreeCreate(AST_REST, 0, $2, $3, 0, 0);}
 | {$$ = 0;}
 ;

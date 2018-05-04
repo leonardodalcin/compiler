@@ -1,6 +1,10 @@
-int main (){print "Incrementado algumas vezes fica " ;
-if (a ==5 ) then print "Parou no meio\n" ;
-if (a ==11 ) then ;
-if (a ==11 ) then else ;
-}int incn (int x ,int n ){return x +n ;
+int a =0 ;
+int i =0 ;
+int v [] :0 ;
+int 0 0 0 0 0 0 0 0 0 int mat [];
+int float f =10.55 ;
+char c ='x' ;
+char d =65 ;
+int #pt =0 ;
+int main (int test ,int lala ){a =incn (a ,1 ,2 ,3 );
 }

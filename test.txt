@@ -1,20 +1,17 @@
 // UFRGS - Compiladores - Marcelo Johann - 2018/1
 
-int main()
+int a = 0;
+int i = 0;
+int v[10]: 0 0 0 0 0 0 0 0 0 0;
+int mat[10];
+float f = 10.55;
+char c = 'x';
+char d = 65;
+int #pt = 0;
+
+
+int main(int test, int lala)
   {
+    a = incn(a,1,2,3);
 
-
-  print "Incrementado algumas vezes fica ";
-  if (a==5) then
-    print "Parou no meio\n";
-  if (a==11) then
-    ;
-  if (a==11) then else
-    ;
-
-  }
-
-int incn (int x, int n)
-  {
-  return x+n;
   }
