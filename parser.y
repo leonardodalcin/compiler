@@ -5,6 +5,7 @@
 #include "scanner.h"
 #include "hash.h"
 #include "astree.h"
+#include "semantic.c"
 
 
 

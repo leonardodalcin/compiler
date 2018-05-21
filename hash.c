@@ -6,9 +6,38 @@
 #include "stdlib.h"
 #include "hash.h"
 #include "y.tab.h"
+#include "symbols.h"
 
 
 HASH_ELEMENT *Table[HASH_SIZE];
+
+void checkUndeclared(void){
+  HASH_ELEMENT* aux;
+
+  int i = 0;
+  for(i = 0 ; i<HASH_SIZE; i++){
+    for(aux = Table[i]; aux ; aux=aux->next){
+      if(aux->type == SYMBOL_IDENTIFIER){
+        fprintf(stderr,"Symbol %s is undeclared!\n",aux->yytext);
+        exit(4);
+      }
+    }
+  }
+}
+
+//Acha se já tem na HASH
+HASH_ELEMENT* alreadyInHash(char *text){
+  int endereco = hashAddress(text);
+  HASH_ELEMENT* aux;
+  //percorrer toda hash até achar
+  for(aux = Table[endereco] ; aux ; aux = aux->next){
+    if(!strcmp(text,aux->yytext)){
+      return aux;
+    }
+  }
+  return 0;
+}
+
 
 void hashInit(void) {
   puts("init");

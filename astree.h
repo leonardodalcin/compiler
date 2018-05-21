@@ -68,6 +68,7 @@ typedef struct s_astree
 	{
 	int verif;
 	int type;
+	int dataType;
 	HASH_ELEMENT * symbol;
 	struct s_astree * son[MAX_SONS];
 	} ASTREE;
