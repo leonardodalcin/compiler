@@ -96,7 +96,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 16 "parser.y"
+#line 15 "parser.y"
 {
     struct hash_node *symbol;
     struct s_astree *astree;

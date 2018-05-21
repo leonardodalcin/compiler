@@ -1,8 +1,5 @@
-id1<=id2
-id1>=
 
-id3==id4
+int text = 10;
+int main(int y){;}
 
 
-1 != 0
-TRUE && TRUE || id3

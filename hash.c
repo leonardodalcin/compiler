@@ -11,6 +11,25 @@
 
 HASH_ELEMENT *Table[HASH_SIZE];
 
+int countInHash(char* text) {
+  HASH_ELEMENT *node;
+  int count = 0;
+  for (int i = 0; i < HASH_SIZE; i++) {
+    for (node = Table[i]; node; node = node->next)
+      switch (node->type) {
+        case TK_IDENTIFIER:
+          if(strcmp(node->yytext, text) == 0) {
+            count++;
+          };
+          break;
+        default:
+          printf("No duplicates\n");
+          break;
+      }
+  }
+  return count;
+}
+
 void checkUndeclared(void){
   HASH_ELEMENT* aux;
 
@@ -31,8 +50,8 @@ HASH_ELEMENT* alreadyInHash(char *text){
   HASH_ELEMENT* aux;
   //percorrer toda hash até achar
   for(aux = Table[endereco] ; aux ; aux = aux->next){
-    if(!strcmp(text,aux->yytext)){
-      return aux;
+    if(strcmp(text,aux->yytext) == 0){
+      return 1;
     }
   }
   return 0;

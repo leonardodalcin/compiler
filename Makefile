@@ -1,5 +1,5 @@
 etapa3: y.tab.c lex.yy.c
-	gcc -o etapa4 lex.yy.c y.tab.c hash.c astree.c
+	gcc -o etapa4 lex.yy.c y.tab.c hash.c astree.c semantic.c
 
 lex.yy.c: scanner.l
 	flex --header-file=lex.yy.h scanner.l

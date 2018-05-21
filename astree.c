@@ -3,8 +3,14 @@
 #include <stdlib.h>
 #include "hash.h"
 
+int isFirst = 1;
+
 ASTREE *astreeCreate(int type, HASH_ELEMENT *symbol, ASTREE *son0, ASTREE *son1, ASTREE *son2, ASTREE *son3) {
   ASTREE *newnode = 0;
+  if (isFirst) {
+    root = newnode;
+    isFirst = 0;
+  }
 
   newnode = calloc(1, sizeof(ASTREE));
   newnode->type = type;
@@ -88,7 +94,7 @@ void nodeType(ASTREE *node) {
         nodeType(node->son[0]);
         nodeType(node->son[1]);
         fprintf(FileTree, "[");
-          nodeType(node->son[3]);
+        nodeType(node->son[3]);
         fprintf(FileTree, "]");
         fprintf(FileTree, ";\n");
       }
@@ -203,7 +209,6 @@ void nodeType(ASTREE *node) {
       break;
 
 
-
     case AST_CMDLIST:
       printf("AST_CMDLIST\n");
       if (node->son[2]) {
@@ -230,7 +235,7 @@ void nodeType(ASTREE *node) {
 
     case AST_ATTRIBUTION:
       printf("AST_ATTRIBUTION\n");
-      if(node->son[2]) {
+      if (node->son[2]) {
         nodeType(node->son[0]);
         fprintf(FileTree, "[");
         nodeType(node->son[1]);
@@ -311,8 +316,8 @@ void nodeType(ASTREE *node) {
 //      ;
 
     case AST_PRINTL:
-      if(node->son[0]) nodeType(node->son[0]);
-      if(node->son[1]) {
+      if (node->son[0]) nodeType(node->son[0]);
+      if (node->son[1]) {
         fprintf(FileTree, " ");
         nodeType(node->son[1]);
       }

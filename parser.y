@@ -5,8 +5,7 @@
 #include "scanner.h"
 #include "hash.h"
 #include "astree.h"
-#include "semantic.c"
-
+#include "semantic.h"
 
 
 extern FILE *yyin;
@@ -222,11 +221,12 @@ if(!(FileTree = fopen(argv[2],"w")))
     {
       printf("Sucess, this is a program!\nLines: %d\n", getLineNumber());
         hashPrint();
-        exit(0);
     }
   } else {
     printf("Usage: ./etapa2 input_filepath\n");
   }
+  printf("%d", root->type);
+  semanticTest(root);
 
 }
 
