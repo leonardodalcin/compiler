@@ -1,5 +1,5 @@
-
 int text = 10;
-int main(int y){;}
 
-
+int main(int y){
+text = 2;
+}

@@ -1,7 +1,7 @@
 #ifndef SEMANTIC_SYMBOLS
 #define SEMANTIC_SYMBOLS
 
-#define SYMBOL_IDENTIFIER     1
+#define TK_IDENTIFIER     1
 #define SYMBOL_CHAR     2
 #define SYMBOL_INTEGER     2
 #define SYMBOL_REAL    3
