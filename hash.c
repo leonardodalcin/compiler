@@ -36,7 +36,7 @@ void checkUndeclared(void){
   int i = 0;
   for(i = 0 ; i<HASH_SIZE; i++){
     for(aux = Table[i]; aux ; aux=aux->next){
-      if(aux->type == SYMBOL_IDENTIFIER){
+      if(aux->type == TK_IDENTIFIER){
         fprintf(stderr,"Symbol %s is undeclared!\n",aux->yytext);
         exit(4);
       }
