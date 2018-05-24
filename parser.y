@@ -150,7 +150,6 @@ body: '{' lcmd '}'  {$$ = astreeCreate(AST_BLOCO, 0, $2, 0, 0, 0);}
 ;
 
 lcmd: cmd ';' lcmd   {$$ = astreeCreate(AST_CMDLIST, 0, $1, 0, $3, 0);}
-| dec lcmd            {$$ = astreeCreate(AST_CMDLIST, 0, $1, $2, 0, 0);}
 | cmd                 {$$ = astreeCreate(AST_CMDLIST, 0, $1, 0, 0, 0);}
 ;
 
@@ -226,7 +225,6 @@ if(!(FileTree = fopen(argv[2],"w")))
     printf("Usage: ./etapa2 input_filepath\n");
   }
   printf("%d", root->type);
-  semanticTest(root);
 
 }
 
