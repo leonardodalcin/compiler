@@ -1,2 +1,4 @@
-int i =0 ;
-int i =0 ;
+float i =1.2 ;
+float a =4.2 ;
+char ae ='a' ;
+char ae ='a' ;
