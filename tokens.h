@@ -34,7 +34,7 @@
 #define OPERATOR_AND  274
 #define OPERATOR_OR   275
 
-#define TK_IDENTIFIER 280
+#define TK_IDENTIFIER 276
 #define LIT_INTEGER   281
 #define LIT_REAL      282
 #define LIT_CHAR      285
