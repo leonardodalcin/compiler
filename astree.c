@@ -62,6 +62,12 @@ void nodeType(ASTREE *node) {
 
       break;
 
+    case AST_DECL:
+      printf("AST_DECL, NODE[0] %d\n", node->son[0]->type);
+      nodeType(node->son[0]);
+
+      break;
+
     case AST_DECLARACAO:
       printf("AST_DECLARACAO, NODE[0] %d\n", node->son[0]->type);
       nodeType(node->son[0]);

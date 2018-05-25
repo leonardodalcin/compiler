@@ -1,71 +1,136 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+/*  ################      Trabalho Prático - Compiladores [PARTE 1]  ################    */
+/*                      Rodolfo Viola Carvalho - 265043   (rvcarvalho)                   */
+/*                      Leonardo Vogel Dalcin - 243654   (lvdalcin)                      */
+
+#include <memory.h>
+#include "stdlib.h"
 #include "hash.h"
+#include "y.tab.h"
+#include "symbols.h"
 
-HASH* Table[HASH_SIZE];
 
-void hashInit(void){
-  int i;
-  for (i = 0; i < HASH_SIZE; i++){
-    Table[i] = 0;
-  }
-}
+HASH_ELEMENT *Table[HASH_SIZE];
 
-HASH* hashInsert(int type, char *text){
-  int address;
-  int achou=0;
 
-  address = hashAddress(text);
-  HASH *newnode = 0;
-  newnode=hashSearch(address,text,&achou);
-
-  if(achou==1){
-    return newnode;
-  }
-    //return NULL;
-  else {
-    newnode = (HASH*) calloc(1,sizeof(HASH));
-    newnode->text = calloc(strlen(text)+1,sizeof(char));
-    strcpy(newnode->text,text);
-    newnode->next = Table[address];
-    newnode->type = type;
-    Table[address] = newnode;
-  }
-  return newnode;
-}
-
-void hashPrint(void){
-  int i;
-  HASH *node;
-
-  for(i = 0; i < HASH_SIZE; i++){
-    for(node = Table[i]; node; node = node->next){
-      printf("Table[%d] Type:%d - Text: %s\n", i, node->type ,node->text);
-    }
-  }
-
-}
-
-int hashAddress(char *text){
-  int address = 1;
-  int i;
-
-  for(i = 0; i < strlen(text); i++){
-    address = (address *text[i])%HASH_SIZE + 1;
-  }
-
-  return address-1;
-}
-
-HASH *hashSearch(int address, char *text,int *achou){
-  HASH *h;
+HASH_ELEMENT *hashSearch(int address, char *text,int *found){
+  HASH_ELEMENT *h;
   for(h = Table[address]; h != NULL; h=h->next)
-    if(strcmp(h->text,text) == 0)
+    if(strcmp(h->yytext,text) == 0)
       break;
   if(h != NULL){
-    *achou=1;
+    *found=1;
     return h;
   }else
     return h;
 }
+
+int countInHash(char* text) {
+  HASH_ELEMENT *node;
+  int count = 0;
+  for (int i = 0; i < HASH_SIZE; i++) {
+    for (node = Table[i]; node; node = node->next)
+      switch (node->type) {
+        case TK_IDENTIFIER:
+          if(strcmp(node->yytext, text) == 0) {
+            count++;
+          };
+          break;
+        default:
+          printf("No duplicates\n");
+          break;
+      }
+  }
+  return count;
+}
+
+void checkUndeclared(void){
+  HASH_ELEMENT* aux;
+
+  int i = 0;
+  for(i = 0 ; i<HASH_SIZE; i++){
+    for(aux = Table[i]; aux ; aux=aux->next){
+      if(aux->type == TK_IDENTIFIER){
+        fprintf(stderr,"Symbol %s is undeclared!\n",aux->yytext);
+        exit(4);
+      }
+    }
+  }
+}
+
+//Acha se já tem na HASH
+HASH_ELEMENT* alreadyInHash(char *text){
+  int endereco = hashAddress(text);
+  HASH_ELEMENT* aux;
+  //percorrer toda hash até achar
+  for(aux = Table[endereco] ; aux ; aux = aux->next){
+    if(strcmp(text,aux->yytext) == 0){
+      return 1;
+    }
+  }
+  return 0;
+}
+
+
+void hashInit(void) {
+  puts("init");
+  for (int i = 0; i < HASH_SIZE; ++i) {
+    Table[i] = 0;
+  }
+}
+
+int hashAddress(char *text) {
+  int address = 1;
+  for (int i = 0; i < strlen(text); ++i) {
+    address = (address * text[i]) % HASH_SIZE + 1;
+  }
+  return address - 1;
+}
+
+HASH_ELEMENT *hashInsert(int type, char *text) {
+
+  int address;
+  int found=0;
+  HASH_ELEMENT *newnode = 0;
+  address = hashAddress(text);
+  newnode=hashSearch(address,text,&found);
+
+  if(found==1){
+    return newnode;
+  }else {
+    newnode = (HASH_ELEMENT *) calloc(1, sizeof(HASH_ELEMENT));
+    newnode->yytext = calloc(strlen(text) + 1, sizeof(char));
+    newnode->type = type;
+
+    strcpy(newnode->yytext, text);
+    newnode->next = Table[address];
+    Table[address] = newnode;
+    return newnode;
+  }
+}
+
+void hashPrint()
+{
+  HASH_ELEMENT *node;
+  for(int i=0; i<HASH_SIZE; i++)
+    for(node = Table[i]; node; node=node->next)
+      switch (node->type) {
+        case TK_IDENTIFIER:
+          printf("Table[%d] = %s is SYMBOL_IDENTIFIER\n", i, node->yytext);
+          break;
+        case LIT_CHAR:
+          printf("Table[%d] = %s is SYMBOL_LITERAL_CHAR\n", i, node->yytext);
+          break;
+        case LIT_STRING:
+          printf("Table[%d] = %s is SYMBOL_LITERAL_STRING\n", i, node->yytext);
+          break;
+        case LIT_INTEGER:
+          printf("Table[%d] = %s is SYMBOL_LITERAL_INT\n", i, node->yytext);
+        case LIT_REAL:
+          printf("Table[%d] = %s is SYMBOL_LITERAL_INT\n", i, node->yytext);
+          break;
+        default:
+          printf("Table[%d]. Type not identified. Type: %s \n ", i, node->yytext);
+      }
+}
+
+

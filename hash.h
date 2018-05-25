@@ -11,9 +11,14 @@
 
 #include <stdio.h>
 #define HASH_SIZE 997
+#define SYMBOL_VAR 6
+#define SYMBOL_VECTOR 7
+#define SYMBOL_FUNC 8
+#define SYMBOL_POINT 9
+#define SYMBOL_PARAM 10
 typedef struct hash_node {
     int type;
-    int dataType;
+    int datatype;
     char *yytext;
     struct hash_node *next;
 } HASH_ELEMENT;

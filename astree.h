@@ -63,12 +63,15 @@
 #define AST_DEC_FUNC 54
 #define AST_PRINTL 55
 #define ASTREE_INIT_LIST 56
+#define AST_DECL 57
 
 typedef struct s_astree
 	{
 	int verif;
-	int type;
-	int dataType;
+	int isVerified;
+
+		int type;
+	int datatype;
 	HASH_ELEMENT * symbol;
 	struct s_astree * son[MAX_SONS];
 	} ASTREE;

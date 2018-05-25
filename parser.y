@@ -7,7 +7,6 @@
 #include "astree.h"
 #include "semantic.h"
 
-
 extern FILE *yyin;
 %}
 
@@ -82,7 +81,7 @@ extern FILE *yyin;
 program: decl {$$ = $1; astreePrint($1); root = $$;}
 ;
 
-decl: dec decl    {$$ = astreeCreate(AST_DECLARACAO, 0, $1, $2, 0, 0);}
+decl: dec decl    {$$ = astreeCreate(AST_DECL, 0, $1, $2, 0, 0);}
 | {$$ = 0;}
 ;
 
@@ -224,8 +223,8 @@ if(!(FileTree = fopen(argv[2],"w")))
   } else {
     printf("Usage: ./etapa2 input_filepath\n");
   }
-  printf("%d", root->type);
-
+  printf("type %d", root->type);
+  set_declarations(root);
 }
 
   int yyerror(char *s)

@@ -1,5 +1,4 @@
-int text = 10;
+int i = 0;
+int i = 0;
+int i = 0;
 
-int main(int y){
-text = 2;
-}
