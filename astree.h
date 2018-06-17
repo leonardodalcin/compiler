@@ -64,6 +64,8 @@
 #define AST_PRINTL 55
 #define ASTREE_INIT_LIST 56
 #define AST_DECL 57
+#define AST_SYMBOL_A 58
+#define AST_SYMBOL_LIT 59
 
 typedef struct s_astree
 	{

@@ -12,7 +12,6 @@ void set_declarations(ASTREE *node)
     if(node->type == AST_VAR)
     {
         if(node->son[1]->symbol->type != TK_IDENTIFIER){
-            fprintf(stderr,"Semantic error: Variable %s already declared.\n",node->son[1]->symbol->yytext);
             exit(4);
         }
         node->son[1]->symbol->type = SYMBOL_INTEGER;

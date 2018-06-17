@@ -86,7 +86,7 @@ void nodeType(ASTREE *node) {
       break;
 
     case AST_VECTOR_INIT:
-      printf("AST_VECTOR_INIT, NODE[0] %d - NODE[1] %d - NODE[2] %d \n", node->son[0]->type, node->son[1]->type);
+//      printf("AST_VECTOR_INIT, NODE[0] %d - NODE[1] %d - NODE[2] %d \n", node->son[0]->type, node->son[1]->type);
       if (node->son[2]) {
         nodeType(node->son[0]);
         nodeType(node->son[1]);
