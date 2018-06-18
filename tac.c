@@ -65,6 +65,9 @@ void tac_print_one(TAC *element) {
     case TAC_SYMBOL:
       printf("SYMBOL ");
       break;
+    case TAC_IFZ:
+      printf("IF ");
+      break;
   }
 
   if (element->res)
@@ -174,6 +177,8 @@ TAC *generateTacCode(ASTREE *node) {
     case AST_OR:
       result = makeBinOp(TAC_OR, code[0], code[1]);
       break;
+    case AST_IF:
+      result = makeIfThen(code[0], code[1]);
     default:
       result = tac_join(tac_join(tac_join(code[0], code[1]), code[2]), code[3]);
       break;

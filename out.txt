@@ -4,4 +4,5 @@ int c =2 ;
 int main (){a =4 +b ;
 a =4 +b ;
 c =a +b ;
+if (a ==11 ) then else ;
 }
