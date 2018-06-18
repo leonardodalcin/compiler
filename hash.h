@@ -16,6 +16,9 @@
 #define SYMBOL_FUNC 8
 #define SYMBOL_POINT 9
 #define SYMBOL_PARAM 10
+#define SYMBOL_SCALAR 11
+#define SYMBOL_LABEL 12
+
 typedef struct hash_node {
     int type;
     int datatype;
@@ -31,5 +34,8 @@ void hashPrint(void);
 //funcoes adicionadas
 HASH_ELEMENT* alreadyInHash(char *text);
 void checkUndeclared(void);
+
+HASH_ELEMENT *makeLabel();
+HASH_ELEMENT *makeTemp();
 
 #endif //COMPILADORES_HASH_H

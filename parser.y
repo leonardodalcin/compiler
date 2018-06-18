@@ -6,6 +6,7 @@
 #include "hash.h"
 #include "astree.h"
 #include "semantic.h"
+#include "tac.h"
 
 
 extern FILE *yyin;
@@ -79,7 +80,7 @@ extern FILE *yyin;
 
 %%
 
-program: decl {$$ = $1; astreePrint($1); root = $$;}
+program: decl {$$ = $1; astreePrint($1); root = $$; tac_printALL(tac_invert(generateTacCode(root)));}
 ;
 
 decl: dec decl    {$$ = astreeCreate(AST_DECLARACAO, 0, $1, $2, 0, 0);}

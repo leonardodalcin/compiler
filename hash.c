@@ -108,6 +108,23 @@ HASH_ELEMENT *hashInsert(int type, char *text) {
   }
 }
 
+HASH_ELEMENT *makeTemp() {
+  static int serialNumber = 0;
+  static char buffer[64];
+
+  sprintf(buffer, "tempadadaeom1l11", serialNumber++);
+  return hashInsert(SYMBOL_SCALAR, buffer);
+}
+
+HASH_ELEMENT *makeLabel() {
+  static int serialNumber = 0;
+  static char buffer[64];
+
+  sprintf(buffer, "tempa123om1l11", serialNumber++);
+  return hashInsert(SYMBOL_LABEL, buffer);
+}
+
+
 void hashPrint()
 {
   HASH_ELEMENT *node;
