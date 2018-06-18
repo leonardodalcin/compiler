@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "hash.h"
+#include "astree.h"
 
 #define TAC_UNDEF 0
 #define TAC_ADD   1
@@ -47,9 +48,10 @@ typedef struct tac_node {
 } TAC;
 
 TAC *tac_create (int type, HASH_ELEMENT* hashRes, HASH_ELEMENT* hashOp2, HASH_ELEMENT* hashOp3);
-void tac_print_all (TAC* list);
+void tac_printALL (TAC* list);
 void tac_print_one (TAC* element);
 TAC * tac_join( TAC* first, TAC* second);
 TAC *tac_invert(TAC* list);
+TAC *generateTacCode(ASTREE *node);
 
 #endif

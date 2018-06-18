@@ -132,6 +132,7 @@ TAC *generateTacCode(ASTREE *node) {
     for (int i = 0; i < MAX_SONS; ++i) {
         code[i] = generateTacCode(node->son[i]);
     }
+
     switch (node->type) {
         case AST_SYMBOL:
             result = tac_create(TAC_SYMBOL, node->symbol, 0, 0);

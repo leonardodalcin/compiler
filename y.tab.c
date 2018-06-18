@@ -1545,7 +1545,7 @@ yyreduce:
     {
         case 2:
 #line 83 "parser.y"
-    {(yyval.astree) = (yyvsp[(1) - (1)].astree); astreePrint((yyvsp[(1) - (1)].astree)); root = (yyval.astree); tac_printALL(tac_invert(generateTacCode(root)));}
+    {(yyval.astree) = (yyvsp[(1) - (1)].astree); astreePrint((yyvsp[(1) - (1)].astree)); root = (yyval.astree); tac_printALL(generateTacCode(root));}
     break;
 
   case 3:

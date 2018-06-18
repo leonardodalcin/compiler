@@ -80,7 +80,7 @@ extern FILE *yyin;
 
 %%
 
-program: decl {$$ = $1; astreePrint($1); root = $$; tac_printALL(tac_invert(generateTacCode(root)));}
+program: decl {$$ = $1; astreePrint($1); root = $$; tac_printALL(generateTacCode(root));}
 ;
 
 decl: dec decl    {$$ = astreeCreate(AST_DECLARACAO, 0, $1, $2, 0, 0);}
