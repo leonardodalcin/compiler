@@ -37,6 +37,7 @@
 #define TAC_CALLPARAM 29
 #define TAC_LESS 30
 #define TAC_GRE 31
+#define TAC_ATTRIBUTION 32
 
 typedef struct tac_node {
     int type;
